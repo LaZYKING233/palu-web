@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="校园帕鲁工作室官方网站。了解小程序功能、团队动态、版本更新与招新信息。" />
+    <meta name="theme-color" content="#f4f5f7" />
+    <meta property="og:title" content="校园帕鲁｜把校园里的事，做顺手" />
+    <meta property="og:description" content="由学生共同设计、开发和维护的校园工具。" />
+    <title>校园帕鲁｜把校园里的事，做顺手</title>
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+    <div class="notice-strip" role="note">
+      <p>2026 秋季招新开放中 · 面向电子信息与自动化学院 2024、2025 级学生</p>
+      <a href="#join">查看招新 <span aria-hidden="true">↗</span></a>
+    </div>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="校园帕鲁首页">
+        <span class="brand-mark" aria-hidden="true">帕</span>
+        <span class="brand-name">校园帕鲁</span>
+        <span class="brand-en">CAMPUS PALU</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+        <span class="menu-label">菜单</span>
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="主导航" data-nav>
+        <a href="#features">功能</a>
+        <a href="#news">公告</a>
+        <a href="#team">团队</a>
+        <a href="#changelog">更新</a>
+        <a class="nav-cta" href="#join">加入我们 <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">由学生共同设计、开发与维护</p>
+          <h1 id="hero-title" class="hero-title reveal">
+            <span>把校园里</span><span>难找的事，</span><span class="hero-title-accent">做顺手。</span>
+          </h1>
+          <div class="hero-intro reveal">
+            <p>课表、考试、空教室、绩点、电费与校园通知，不再散落在不同入口里。</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#features">看看能做什么</a>
+              <a class="text-link" href="#news">最近发生了什么 <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-stage reveal" aria-label="校园帕鲁小程序功能界面示意">
+          <div class="hero-word" aria-hidden="true">PALU</div>
+          <div class="orbit-label orbit-label-top" aria-hidden="true">FOR CAMPUS LIFE</div>
+          <div class="orbit-label orbit-label-bottom" aria-hidden="true">MADE BY STUDENTS</div>
+          <div class="phone-shell">
+            <div class="phone-topbar"><span>09:41</span><span class="phone-island"></span><span>● ⌁</span></div>
+            <div class="phone-screen">
+              <div class="app-heading">
+                <div><span class="app-kicker">今天也要顺顺利利</span><strong>早上好，同学</strong></div>
+                <span class="avatar">P</span>
+              </div>
+              <div class="today-card">
+                <div class="today-date"><span>今日安排</span><strong>3</strong><small>项</small></div>
+                <div class="course-list">
+                  <p><span>08:00</span> 信号与系统</p><p><span>10:10</span> 大学物理实验</p><p><span>14:30</span> 创新实践</p>
+                </div>
+              </div>
+              <div class="quick-grid">
+                <div><span class="quick-icon">课</span><small>我的课表</small></div>
+                <div><span class="quick-icon">室</span><small>空教室</small></div>
+                <div><span class="quick-icon">绩</span><small>绩点工具</small></div>
+                <div><span class="quick-icon">电</span><small>宿舍电费</small></div>
+              </div>
+              <div class="app-notice">
+                <span class="notice-dot"></span><div><small>校园通知</small><strong>工作室秋季招新开始啦</strong></div><span aria-hidden="true">›</span>
+              </div>
+            </div>
+          </div>
+          <div class="floating-card floating-card-room">
+            <span class="floating-label">空教室</span><strong>现在有 12 间</strong><small>点开即可查看</small>
+          </div>
+          <div class="floating-card floating-card-version">
+            <span class="floating-label">CURRENT</span><strong>v3.2.2</strong><small>持续维护中</small>
+          </div>
+        </div>
+
+        <div class="hero-rail" aria-label="主要功能">
+          <div class="rail-track">
+            <span>校园通知</span><i></i><span>我的课表</span><i></i><span>考试安排</span><i></i><span>空教室</span><i></i><span>绩点工具</span><i></i><span>宿舍电费</span><i></i>
+            <span>校园通知</span><i></i><span>我的课表</span><i></i><span>考试安排</span><i></i><span>空教室</span><i></i><span>绩点工具</span><i></i><span>宿舍电费</span><i></i>
+          </div>
+        </div>
+      </section>
+
+      <section class="manifesto section-shell" aria-labelledby="manifesto-title">
+        <div class="section-tag reveal"><span>关于校园帕鲁</span><span>ABOUT</span></div>
+        <div class="manifesto-grid">
+          <h2 id="manifesto-title" class="section-title reveal">从一次查询开始，<br />把麻烦留给我们。</h2>
+          <div class="manifesto-copy reveal">
+            <p>校园帕鲁不是另一个信息堆砌的入口。我们把散落的校园服务重新整理，让每个功能在真正需要它的时候出现。</p>
+            <p>它由学生使用，也由学生推动。我们在每一次反馈、修复和版本讨论里，继续回答同一个问题：这件事还能不能更简单一点？</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="features section-shell" id="features" aria-labelledby="features-title">
+        <div class="section-tag reveal"><span>小程序功能</span><span>FEATURES</span></div>
+        <div class="section-heading-row">
+          <h2 id="features-title" class="section-title reveal">校园生活，<br />少绕几步。</h2>
+          <p class="section-lead reveal">功能会持续变化，但目标不会：让常用信息更容易找到，让复杂流程更容易完成。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card feature-card-wide reveal">
+            <div class="feature-copy">
+              <span class="feature-index">学习 / STUDY</span><h3>从课表到绩点，<br />把学习进度放在一起。</h3>
+              <p>查看课表与考试安排，导入课程成绩，按学期管理并计算绩点。</p>
+              <ul class="chip-list" aria-label="学习功能"><li>课表</li><li>考试</li><li>绩点</li><li>学业进度</li></ul>
+            </div>
+            <div class="feature-visual transcript-card" aria-hidden="true">
+              <div class="transcript-head"><span>2025—2026 学年</span><span>本学期</span></div>
+              <div class="score-ring"><strong>3.72</strong><span>GPA</span></div>
+              <div class="score-row"><span>信号与系统</span><b>90</b></div><div class="score-row"><span>大学物理</span><b>87</b></div><div class="score-row"><span>自动控制原理</span><b>92</b></div>
+            </div>
+          </article>
+          <article class="feature-card feature-card-purple reveal">
+            <span class="feature-index">日程 / PLAN</span><h3>今天去哪，<br />什么时候考。</h3><p>课程、考试、校历与班级事项，在需要的时候快速确认。</p>
+            <div class="mini-calendar" aria-hidden="true"><div><span>MON</span><strong>24</strong></div><div><span>TUE</span><strong>25</strong></div><div class="is-active"><span>WED</span><strong>26</strong></div><div><span>THU</span><strong>27</strong></div><div><span>FRI</span><strong>28</strong></div></div>
+          </article>
+          <article class="feature-card feature-card-dark reveal">
+            <span class="feature-index">校园 / CAMPUS</span><h3>教室、电费、教材，<br />日常问题就近解决。</h3><p>查找空教室，查询宿舍电费，获取教材与校园常用信息。</p>
+            <div class="campus-stat" aria-hidden="true"><span>AVAILABLE NOW</span><strong>12</strong><small>间空教室</small></div>
+          </article>
+          <article class="feature-card feature-card-wide feature-card-paper reveal">
+            <div class="feature-copy">
+              <span class="feature-index">工具 / TOOLS</span><h3>不常用，但要用时<br />最好马上能找到。</h3><p>物理实验工具、体测信息、常见问题与个性化快捷入口，按需出现。</p>
+              <ul class="chip-list" aria-label="工具功能"><li>实验工具</li><li>体测</li><li>FAQ</li><li>快捷入口</li></ul>
+            </div>
+            <div class="tool-stack" aria-hidden="true"><span>牛顿环</span><span>迈克尔逊</span><span>热导率</span></div>
+          </article>
+        </div>
+        <p class="feature-note reveal">部分功能需要登录或对应身份权限；具体可用范围以小程序当前版本为准。</p>
+      </section>
+
+      <section class="news section-shell" id="news" aria-labelledby="news-title">
+        <div class="section-tag reveal"><span>公告与动态</span><span>NEWSROOM</span></div>
+        <div class="section-heading-row">
+          <h2 id="news-title" class="section-title reveal">正在发生。</h2>
+          <p class="section-lead reveal">工作室公告、版本动态与值得被看到的变化，会在这里持续更新。</p>
+        </div>
+        <div class="news-grid">
+          <a class="news-feature reveal" href="#join">
+            <div class="news-meta"><span>招新</span><time datetime="2026">2026 AUTUMN</time></div>
+            <div class="news-feature-copy"><h3>想一起做点<br />真正有人用的东西吗？</h3><p>校园帕鲁工作室面向电子信息与自动化学院 2024、2025 级学生招新。</p><span class="news-arrow" aria-hidden="true">↘</span></div>
+          </a>
+          <div class="news-list reveal">
+            <article><div class="news-meta"><span>版本</span><span>v3.2.2</span></div><h3>财务查询页面滚动体验修复</h3><p>修复交易记录列表区域高度继承异常，恢复列表上下滑动。</p></article>
+            <article><div class="news-meta"><span>功能</span><span>v3.2.1</span></div><h3>新生入口继续完善</h3><p>新增校园地图入口，并优化部分静态资源的加载方式。</p></article>
+            <article><div class="news-meta"><span>体验</span><span>v3.1.0</span></div><h3>外观设置支持跟随系统</h3><p>深浅色主题可以随系统自动切换，已打开页面同步响应。</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="team section-shell" id="team" aria-labelledby="team-title">
+        <div class="section-tag reveal"><span>校园帕鲁工作室</span><span>THE TEAM</span></div>
+        <div class="team-intro">
+          <h2 id="team-title" class="section-title reveal">不止写代码，<br />也一起决定做什么。</h2>
+          <p class="section-lead reveal">一个产品要被长期使用，需要开发、运营和用户沟通同时发生。我们把不同擅长的人放在同一张桌子上。</p>
+        </div>
+        <div class="department-list">
+          <article class="department reveal"><div class="department-code">DEV</div><h3>开发部</h3><p>负责小程序的开发、测试与日常维护，把想法落成稳定可用的功能。</p><span class="department-open">计划招募 3 人</span></article>
+          <article class="department reveal"><div class="department-code">OPS</div><h3>运营部</h3><p>参与版本决策、内容运营与活动策划，让产品和真实校园需求保持联系。</p><span class="department-open">计划招募 7 人</span></article>
+          <article class="department reveal"><div class="department-code">CARE</div><h3>客服部</h3><p>对接用户、整理反馈并协助解决问题，让每一次使用都有人回应。</p><span class="department-open">计划招募 10 人</span></article>
+        </div>
+      </section>
+
+      <section class="changelog section-shell" id="changelog" aria-labelledby="changelog-title">
+        <div class="section-tag section-tag-light reveal"><span>更新日志</span><span>CHANGELOG</span></div>
+        <div class="changelog-layout">
+          <div class="changelog-heading"><h2 id="changelog-title" class="section-title reveal">持续变好，<br />也记录过程。</h2><p class="reveal">每次更新不一定很大，但每个真实问题都值得被认真修好。</p></div>
+          <ol class="version-list">
+            <li class="version-item is-current reveal"><div class="version-number"><span>CURRENT</span><strong>v3.2.2</strong></div><div class="version-copy"><h3>修复财务查询列表滚动</h3><p>处理列表区域高度继承异常，交易记录恢复正常上下滑动。</p></div><span class="version-mark" aria-hidden="true">●</span></li>
+            <li class="version-item reveal"><div class="version-number"><span>RECENT</span><strong>v3.2.1</strong></div><div class="version-copy"><h3>新生入口与资源优化</h3><p>完善新生待办展示，新增校园地图入口，并调整静态资源加载。</p></div><span class="version-mark" aria-hidden="true">○</span></li>
+            <li class="version-item reveal"><div class="version-number"><span>THEME</span><strong>v3.1.0</strong></div><div class="version-copy"><h3>新增跟随系统主题</h3><p>深色与浅色外观可以随系统实时切换。</p></div><span class="version-mark" aria-hidden="true">○</span></li>
+            <li class="version-item reveal"><div class="version-number"><span>NAV</span><strong>v3.0.0</strong></div><div class="version-copy"><h3>重做快捷入口</h3><p>支持从学生功能中选择常用入口加入底部导航。</p></div><span class="version-mark" aria-hidden="true">○</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="join section-shell" id="join" aria-labelledby="join-title">
+        <div class="join-topline reveal"><span>2026 秋季招新</span><span>RECRUITMENT OPEN</span></div>
+        <div class="join-layout">
+          <div class="join-copy">
+            <h2 id="join-title" class="join-title reveal">这次，<br />换你来定义<br /><em>下一版。</em></h2>
+            <p class="join-lead reveal">面向电子信息与自动化学院 2024、2025 级学生。无论你更擅长开发、策划，还是与人沟通，我们都期待认真、主动、愿意一起把事情做完的你。</p>
+          </div>
+          <div class="join-panel reveal">
+            <div class="join-audience"><span>招募范围</span><strong>2024 / 2025</strong><p>电子信息与自动化学院学生</p></div>
+            <div class="join-counts" aria-label="各部门招募计划"><div><strong>3</strong><span>开发部</span></div><div><strong>7</strong><span>运营部</span></div><div><strong>10</strong><span>客服部</span></div></div>
+            <div class="join-action">
+              <div class="qr-placeholder" aria-label="招新群二维码待补充"><span>QR</span><small>待补充</small></div>
+              <div><strong>加入招新群</strong><p>二维码补充后，可在这里扫码加入。</p><span class="pending-label">发布前待补充</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand"><span class="brand-mark" aria-hidden="true">帕</span><div><strong>校园帕鲁</strong><span>把校园里的事，做顺手。</span></div></div>
+      <div class="footer-links"><a href="#features">功能</a><a href="#news">公告</a><a href="#team">团队</a><a href="#join">招新</a></div>
+      <div class="footer-meta"><span>由校园帕鲁工作室维护</span><span>© <span data-year>2026</span> CAMPUS PALU</span></div>
+    </footer>
+  </body>
+</html>
