@@ -8,7 +8,8 @@
     <meta property="og:title" content="凌音小窝｜校园帕鲁｜把校园里的事，做顺手" />
     <meta property="og:description" content="由学生共同设计、开发和维护的校园工具。" />
     <title>凌音小窝｜校园帕鲁｜把校园里的事，做顺手</title>
-    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./assets/palu-app-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/palu-app-icon.png" />
     <link rel="stylesheet" href="./styles.css" />
     <script>document.documentElement.classList.add('js');</script>
     <script src="./script.js" defer></script>
@@ -23,7 +24,7 @@
 
     <header class="site-header" data-header>
       <a class="brand" href="#top" aria-label="校园帕鲁首页">
-        <span class="brand-mark" aria-hidden="true">帕</span>
+        <img class="brand-mark brand-logo" src="./assets/palu-app-icon.png" alt="" />
         <span class="brand-name">校园帕鲁</span>
         <span class="brand-en">CAMPUS PALU</span>
       </a>
@@ -175,9 +176,9 @@
           <p class="section-lead reveal">一个产品要被长期使用，需要开发、运营和用户沟通同时发生。我们把不同擅长的人放在同一张桌子上。</p>
         </div>
         <div class="department-list">
-          <article class="department reveal"><div class="department-code">DEV</div><h3>开发部</h3><p>负责小程序的开发、测试与日常维护，把想法落成稳定可用的功能。</p><span class="department-open">计划招募 3 人</span></article>
-          <article class="department reveal"><div class="department-code">OPS</div><h3>运营部</h3><p>参与版本决策、内容运营与活动策划，让产品和真实校园需求保持联系。</p><span class="department-open">计划招募 7 人</span></article>
-          <article class="department reveal"><div class="department-code">CARE</div><h3>客服部</h3><p>对接用户、整理反馈并协助解决问题，让每一次使用都有人回应。</p><span class="department-open">计划招募 10 人</span></article>
+          <a class="department reveal" href="./development.html"><div class="department-code">DEV</div><h3>开发部</h3><p>负责小程序的开发、测试与日常维护，把想法落成稳定可用的功能。</p><span class="department-action"><span class="department-open">计划招募 3 人</span><span class="department-arrow" aria-hidden="true">↗</span></span></a>
+          <a class="department reveal" href="./operations.html"><div class="department-code">OPS</div><h3>运营部</h3><p>参与版本决策、内容运营与活动策划，让产品和真实校园需求保持联系。</p><span class="department-action"><span class="department-open">计划招募 7 人</span><span class="department-arrow" aria-hidden="true">↗</span></span></a>
+          <a class="department reveal" href="./support.html"><div class="department-code">CARE</div><h3>客服部</h3><p>对接用户、整理反馈并协助解决问题，让每一次使用都有人回应。</p><span class="department-action"><span class="department-open">计划招募 10 人</span><span class="department-arrow" aria-hidden="true">↗</span></span></a>
         </div>
       </section>
 
@@ -214,7 +215,7 @@
     </main>
 
     <footer class="site-footer">
-      <div class="footer-brand"><span class="brand-mark" aria-hidden="true">帕</span><div><strong>校园帕鲁</strong><span>把校园里的事，做顺手。</span></div></div>
+      <div class="footer-brand"><img class="brand-mark brand-logo" src="./assets/palu-app-icon.png" alt="" /><div><strong>校园帕鲁</strong><span>把校园里的事，做顺手。</span></div></div>
       <div class="footer-links"><a href="#features">功能</a><a href="#news">公告</a><a href="#team">团队</a><a href="#join">招新</a></div>
       <div class="footer-meta">
         <span>由校园帕鲁工作室维护</span>
