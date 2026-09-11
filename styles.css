@@ -203,6 +203,51 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 }
 .department-page-care { --dept-accent: #68c6ff; --dept-accent-deep: #07527f; }
 .department-page .site-header { background: rgb(244 245 247 / 94%); }
+
+/* Tech handbook: chapter-detail article body (FAQ 内嵌文章) */
+.faq-list details > h3 { margin: 36px 0 16px; padding-top: 18px; border-top: 1px solid var(--ink); font-family: var(--display); font-size: clamp(24px, 2.4vw, 34px); font-weight: 500; letter-spacing: -.025em; line-height: 1.2; }
+.faq-list details > h3:first-of-type { margin-top: 24px; }
+.faq-list details > p { margin: 0 0 16px; font-size: 16px; line-height: 1.8; }
+.faq-list details > p:last-child { margin-bottom: 0; }
+
+/* Tech handbook: 第一段大字引言（如"为什么专门讲 ChatGPT 的购买方式"） */
+.handbook-lead { max-width: 760px; margin: 28px 0 24px !important; font-size: clamp(20px, 1.8vw, 26px) !important; line-height: 1.7 !important; color: var(--ink); }
+
+/* Tech handbook: 二级折叠 (嵌套在 .faq-list details 内部，比一级更紧凑) */
+.nested-details { margin: 8px 0; border-top: 1px solid var(--line); }
+.nested-details:last-of-type { border-bottom: 1px solid var(--line); }
+.nested-details summary { min-height: 56px; padding: 14px 48px 14px 0; position: relative; display: flex; align-items: center; gap: 18px; cursor: pointer; font-family: var(--display); font-size: clamp(18px, 1.6vw, 24px); font-weight: 500; letter-spacing: -.015em; line-height: 1.3; list-style: none; color: var(--ink); }
+.nested-details summary::-webkit-details-marker { display: none; }
+.nested-details summary::after { content: "›"; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-family: var(--sans); font-size: 26px; font-weight: 300; color: var(--muted); transition: transform 180ms ease; }
+.nested-details[open] summary::after { transform: translateY(-50%) rotate(90deg); }
+.nested-details summary > span { flex: 0 0 auto; padding: 5px 11px; border: 1px solid var(--ink); border-radius: 999px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; white-space: nowrap; }
+.nested-details > p { margin: 4px 0 18px; padding-left: 70px; font-size: 15px; line-height: 1.8; }
+.nested-details > ul { margin: 4px 0 18px 90px; padding: 0; list-style: disc; }
+.nested-details > ul > li { margin-bottom: 6px; font-size: 15px; line-height: 1.75; }
+.nested-details > blockquote { margin: 8px 0 18px 90px; padding: 12px 18px; color: var(--muted); border-left: 3px solid var(--dept-accent); font-size: 15px; line-height: 1.7; }
+.nested-details > blockquote p { margin: 0; padding: 0; }
+.week-rail { margin: clamp(40px, 5vw, 72px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--ink); border-left: 1px solid var(--ink); list-style: none; }
+.week-rail li { min-height: 220px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; color: var(--ink); background: #fff; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.week-rail li > span { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; }
+.week-rail li strong { margin: 38px 0 8px; font-family: var(--display); font-size: clamp(24px, 2.2vw, 36px); font-weight: 500; line-height: 1.2; }
+.week-rail li small { color: var(--muted); font-size: 13px; }
+.week-rail li.is-core { color: #fff; background: var(--ink); }
+.week-rail li.is-core small { color: rgb(255 255 255 / 62%); }
+
+/* Tech handbook: responsive overrides */
+@media (max-width: 1000px) {
+  .week-rail { grid-template-columns: 1fr; }
+}
+
+/* Tech handbook: first-part article body (LLM/Harness/Agent/语言) */
+.handbook-section { padding-block: clamp(56px, 7vw, 112px); border-top: 1px solid var(--ink); }
+.handbook-section-tag { margin-bottom: 28px; padding-top: 12px; display: flex; justify-content: space-between; border-top: 1px solid var(--ink); font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.handbook-section h2 { margin-bottom: 28px; font-family: var(--display); font-size: clamp(38px, 4.6vw, 72px); font-weight: 500; letter-spacing: -.045em; line-height: 1.05; }
+.handbook-section p { max-width: 760px; margin: 0 0 20px; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.85; }
+.handbook-section p:last-child { margin-bottom: 0; }
+.handbook-list { max-width: 760px; margin: 24px 0 0; padding-left: 24px; font-size: clamp(16px, 1.4vw, 19px); line-height: 1.85; }
+.handbook-list > li { margin-bottom: 16px; padding-left: 8px; }
+.handbook-list > li:last-child { margin-bottom: 0; }
 .department-header { border-bottom-color: var(--line); }
 .back-home { padding: 10px 0 8px; display: inline-flex; align-items: center; gap: 9px; border-bottom: 1px solid currentColor; font-size: 13px; font-weight: 700; }
 .back-home span { font-size: 18px; transition: transform 180ms ease; }
@@ -212,7 +257,7 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 .dept-hero::before { content: ""; position: absolute; top: 0; right: 28%; bottom: 0; width: 1px; background: var(--line); }
 .dept-coordinate { margin-bottom: clamp(52px, 7vw, 90px); padding-top: 12px; display: flex; justify-content: space-between; border-top: 1px solid var(--ink); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; }
 .dept-kicker { margin-bottom: 22px; font-size: clamp(16px, 1.4vw, 20px); font-weight: 700; }
-.dept-hero h1 { margin-bottom: 36px; font-family: var(--display); font-size: clamp(92px, 14vw, 250px); font-weight: 500; letter-spacing: -.1em; line-height: .72; }
+.dept-hero h1 { margin-bottom: 36px; font-family: var(--display); font-size: clamp(72px, 10vw, 168px); font-weight: 500; letter-spacing: -.06em; line-height: .92; }
 .dept-lead { max-width: 680px; margin-bottom: 34px; color: var(--muted); font-size: clamp(17px, 1.5vw, 22px); }
 .dept-hero-actions { display: flex; align-items: center; gap: 24px; font-family: var(--mono); font-size: 11px; }
 .dept-button { color: var(--ink); background: var(--dept-accent); border-color: var(--ink); }

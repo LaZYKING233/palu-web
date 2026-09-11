@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="校园帕鲁工作室技术部入门学习指南。" />
+    <meta name="theme-color" content="#d9ff6c" />
+    <title>技术部入门学习指南｜校园帕鲁工作室</title>
+    <link rel="icon" href="./assets/palu-app-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./assets/palu-app-icon.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script>document.documentElement.classList.add('js');</script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body class="department-page department-page-dev">
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+
+    <header class="site-header department-header" data-header>
+      <a class="brand" href="./index.html" aria-label="校园帕鲁首页">
+        <img class="brand-mark brand-logo" src="./assets/palu-app-icon.png" alt="" />
+        <span class="brand-name">校园帕鲁</span>
+        <span class="brand-en">CAMPUS PALU</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+        <span class="menu-label">目录</span>
+        <span class="menu-icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="主导航" data-nav>
+        <a href="#about">关于</a>
+        <a href="#path">路径</a>
+        <a class="nav-cta" href="#chapter-detail">开始阅读 <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="dept-hero" id="about">
+        <div class="dept-hero-copy reveal">
+          <div class="dept-coordinate"><span>技术部 / DEV</span><span>ONBOARDING</span></div>
+          <p class="dept-kicker">从不会开始，把想法做出来</p>
+          <h1>技术部<br />学习指南</h1>
+          <p class="dept-lead">给技术部新成员的学习资料。第一部分先把 LLM、Harness、Agent 三个概念讲清楚，再列出本方向常用的编程语言；第二部分讲如何购买 ChatGPT，按步骤操作就能用上。</p>
+          <div class="dept-hero-actions">
+            <a class="button dept-button" href="#chapter-detail">从第一章开始</a>
+            <span>预计阅读 20 分钟</span>
+          </div>
+          <p class="dept-boundary"><strong>使用方式</strong><span>按章节顺序读。第一部分是概念，正文较长；第二部分按步骤操作，按需查阅即可。</span></p>
+        </div>
+        <div class="dept-emblem reveal" aria-hidden="true">
+          <img src="./assets/palu-app-icon.png" alt="" />
+          <span></></span>
+        </div>
+      </section>
+
+      <section class="dept-section dept-opportunity" id="path" aria-labelledby="path-title">
+        <div class="dept-section-head reveal"><span>阅读路径</span><span>READ IN ORDER</span></div>
+        <div class="resource-heading reveal">
+          <h2 id="path-title">两个章节，<br />先概念，后操作。</h2>
+          <p>第一部分建立基本认知，第二部分把第一个工具用到手。顺序可以调整，但建议先看完第一部分再上手。</p>
+        </div>
+        <ol class="week-rail reveal" aria-label="阅读路径">
+          <li><span>PART 01</span><strong>关于 AI</strong><small>LLM · Harness · Agent · 语言</small></li>
+          <li><span>PART 02</span><strong>购买 ChatGPT</strong><small>账号 · 支付 · 订阅 · 使用</small></li>
+        </ol>
+      </section>
+
+      <section class="dept-section dept-principles" aria-labelledby="detail-title">
+        <div class="dept-section-head reveal"><span>章节展开</span><span>READ IN DETAIL</span></div>
+        <div class="principles-layout">
+          <div class="resource-heading reveal">
+            <h2 id="detail-title">点开读，<br />看自己想看的部分。</h2>
+            <p>每个章节用同样的结构展开：目标、要做的事、补充说明。先看目标，再决定从哪里切入。</p>
+          </div>
+          <div class="faq-list reveal" id="chapter-detail">
+            <details id="ch-01" open>
+              <summary><span>01 / 关于AI</span>第一章 · 关于 AI</summary>
+              <p><strong>目标</strong>：把 LLM、Harness、Agent 这三个在 2026 年反复出现的概念讲清楚，并列出本方向最常用的一些编程语言。</p>
+              <p><strong>LLM（Large Language Model，大语言模型）</strong>：基于 Transformer 架构、在海量文本上预训练的概率模型。给定一段上下文，预测下一个 token，并以此生成连贯的自然语言或代码。它不检索事实，生成的是「最像合理继续」的文本，所以在事实性、数学性、确定性任务上可能出错，需要外部工具或人来兜底。2026 年的主流 LLM 已经普遍具备：长上下文（数十万到百万 token 量级）、工具调用（function calling / tool use）、多模态输入（文本 + 图像 + 音频 + 视频）、结构化输出（JSON / 代码）。这些能力本身不等于「Agent」，它们是 Agent 用来决策的「大脑」。</p>
+              <p><strong>Harness</strong>：包裹在 LLM 外面的运行时基础设施。2026 年流行的总结是 Agent = Model + Harness。LLM 本身是无状态的，不会主动调工具，也不保证自己写出的代码能跑；Harness 负责把这些事补上（管理会话、调度工具、维护上下文、持久化状态、隔离沙箱、设置权限与护栏）。判断一个系统是不是 Harness 的四个必要条件（arXiv 2606.10106）：① Agent Loop（推理 → 行动 → 观察 → 再推理的循环）；② Tool Interface（让模型能感知并修改外部环境）；③ Context Management（主动管理流入流出的信息）；④ Control Mechanisms（不依赖模型「愿不愿意服从」的限制、验证器、确定性处理）。LangGraph / CrewAI / AutoGen 这类「框架」是用来构建 Harness 的工厂，不是 Harness；Claude Agent SDK / OpenAI Agents SDK 是零件，不是 Harness。真正的 Harness 实例：Claude Code、Codex CLI、Aider、Cline、OpenHands、SWE-agent、Hermes Agent 等。</p>
+              <p><strong>Agent</strong>：「LLM + Harness」组合之后跑起来的系统形态。给定一个目标，自己决定下一步做什么、调用哪些工具、怎么验证结果，直到目标完成或触发停止条件。Agent 与「聊天机器人」、「RAG 检索增强」的根本差异是<strong>自治度</strong>：聊天机器人只回答一次；RAG 检索完就生成回答；Agent 检索、决策、执行、观察、再决策。2026 年主流 Agent 架构的四个角色：Planner（拆目标为子目标）、Executor（在当前状态下决定调用哪个工具的 LLM 调用，token 消耗大头）、Memory（短期 = 上下文窗口里的对话缓冲，长期 = 向量库/结构化数据库/文件）、Tools（网页搜索、代码解释器、数据库查询、文件操作、API、其他 Agent）。Anthropic 2024 年 12 月的《Building Effective Agents》还区分了 Agentic Workflow（开发者写好图，LLM 在节点里填内容）和 AI Agent（LLM 在运行时自己决定图的下一条边）。</p>
+              <p><strong>常用语言（按本项目使用频率排序）</strong>：JavaScript / TypeScript（小程序前端与构建工具链的事实标准）、Python（AI 工具链的事实标准：训练、推理、评测、agent 编排）、PHP（本项目后端云函数与 API）、SQL（从 PostgreSQL / MySQL 取数）、Shell（bash / PowerShell，构建、部署、调试绕不开）、Rust（新一代 AI 基础设施语言，Hermes Agent 本身、llama.cpp、tokenizers、Polars 等）、C / C++（底层推理引擎实现语言）、Mojo（Modular 出品、Python 语法的超集、能编译到原生机器码，2026 年仍是早期阶段）、Julia（科学计算与数值分析方向的语言）。入门优先级：JavaScript / TypeScript 与 Python 先扎实；SQL 与 Shell 同步学；PHP 看后端代码时跟着读；Rust / C++ 在真正碰到性能瓶颈或读底层代码时再深入；Mojo / Julia 了解即可。</p>
+            </details>
+            <details id="ch-02" open>
+              <summary><span>02 / ChatGPT</span>第二章 · 购买 ChatGPT</summary>
+              <p><strong>目标</strong>：完成 ChatGPT 账号注册、选择适合自己的订阅档位（Free / Plus / Team / Pro）、完成首次支付，并把 ChatGPT 用到至少一个真实任务里。</p>
+
+              <p class="handbook-lead">为什么专门讲 ChatGPT 的购买方式。一方面是因为这个不是国内的；另一方面是它便宜而且好用。</p>
+
+              <h3>三种购买方案</h3>
+              <p>前提：三种方案都要求自备稳定的网络环境（俗称「梯子」），并且需要海外 IP 才能完成支付与订阅。请先把网络环境确认好再开始操作。</p>
+              <details class="nested-details">
+                <summary><span>方案 A</span>海外 Apple ID + App Store 内购</summary>
+                <p>方案一的主要流程是，海外 apple id → 下载 chatgpt → 支付方式选择无 → 应用内购。</p>
+                <p>大家可以去网上找一找视频教程，文字写的不是很清楚可能。我自己也有一些遗忘了。</p>
+                <p>然后我会一步一步讲，在开始之前最好先在电脑上挂上梯子（以防万一），最好选择美区。</p>
+                <p>关于地区的选择，首先你要看这样的两个网站，第一个：<a href="https://appstoreprice.org/zh">App Store Price - 发现全球 App Store 最低价</a>，这个是看各个地区的 chatgpt 的订阅价格的，然后第二个：<a href="https://www.seagm.com/zh">SEAGM - 全球华人首选线上游戏点卡, 购物礼品卡, 手游和直播充值直充平台</a>，这个是用于看你可以买什么地区礼品卡的（我们会选择用礼品卡充值，其他的没有搞出来过）。选择美区的原因就是：</p>
+                <blockquote>首先不是很贵，其次你买得到，然后就是社区完善，大家都教你怎么在美区买，你遇见问题了，可以参考的资料多。</blockquote>
+                <p>本人经历避雷加拿大，当然日本也没有成功过。</p>
+                <p>首先就是一个 apple id，注意你的这个 apple id 是需要一个海外的（网址：<a href="https://account.apple.com/">Apple 账户：登录与管理</a>）。</p>
+                <ul>
+                  <li>如果你有自己的国内的 apple id，你可以考虑转区。</li>
+                  <li>当然你也可以自己新注册一个，全程没有梯子要求和乱七八糟要求，就直接 +86 手机号和自己的 qq 邮箱都可以。</li>
+                </ul>
+                <p>注册的时候可能会让你写支付地址这些啥的，这个时候如果你有梯子的话，正常而言会有一个选项是无支付方式。你就选择那个就好了，如果有地址的话，需要一个美国免税州（打开你的浏览器，搜索美国免税州地址生成器）。</p>
+                <p>这个时候第一步算是结束了，然后第二步就是，你需要登录上你的这个海外的 apple id 到你的 app store（希望你找得到在什么地方退出 app store 和登录……）</p>
+                <p>如果你没有梯子，你可能需要一个 UU 加速器，然后加速一下你的 app store，之后你最好先充个几刀，先去买一个小火箭，或者用免费的（但是那个非常糟糕）。然后梯子的话，你没有再找我们吧。</p>
+                <p>然后下载 chatgpt！（没有的话，那就是你的号肯定不是海外的号，注意香港也是封禁的）</p>
+                <p>之后登录一下自己的 chatgpt 账号，当然了，你需要先注册（<a href="https://chatgpt.com">https://chatgpt.com</a>）。</p>
+                <p>这个时候回到自己的 app store，然后点右上角自己的头像，你需要找到自己的支付方式（payment methods），把付款方式修改为无（none），地址（billing address）需要写的话，同你在之前在电脑上写的免税州地址一样（之前没有写就不用管了，这个写了就行），注意一定是支付方式是<strong>无 + 免税州</strong>。</p>
+                <p>然后去买礼品卡，再打开 app 内购。</p>
+                <p>如果你 fail 了，那就是你的号被风控了。解决方案如下，你先下一个 apple support，然后去设置（注意是手机的设置里面嗷）里面，修改你的地区和语音，修改为美国，语言是英语。然后你用 apple support，去和客服对线（注意你得说英语，我知道大家的英语一定都很好，所以应该问题不大），正常来说，客服会和你说等个几天就好了，你就老老实实等着，到了时间就去再试试，应该就好了。</p>
+              </details>
+              <details class="nested-details">
+                <summary><span>方案 B</span>Google Play + VISA 卡</summary>
+                <p>这个方案适用于安卓用户们。</p>
+                <p>在正式开始之前，需要确保自己有这样的东西：谷歌账号，自己的手机上可以下载和打开谷歌商店，visa 卡。</p>
+                <p>关于谷歌的部分得大家自行解决，因为谷歌后面政策有收紧，我们的谷歌号都有好几年了。所以现在的注册方案我也不是很清楚。然后下载和使用谷歌商店，因为我们是小米，所以也自带，其他机型和品牌不了解。</p>
+                <p>关于 visa 卡，可以参考这个视频：<a href="https://www.bilibili.com/video/BV1XiTS6jERb?vd_source=3202142a93798baefc03647084ed79a0">【最详细的外币卡办理教学（别惦记你那破虚拟卡了，不怕跑路啊）】</a>。</p>
+                <p>本人使用的是招商银行的万事达卡，去的时候需要带自己的学生证和身份证，其他都不需要，过程非常方便和流畅。</p>
+                <p>另外的我本人使用、验证过的视频，截止 2026.9.11，均被下架。</p>
+                <p>关于地区：</p>
+                <blockquote>选择美区的原因就是，首先不是很贵，其次你买得到，然后就是社区完善，大家都教你怎么在美区买，你遇见问题了，可以参考的资料多。</blockquote>
+                <p>上面三者都具备之后。开始操作。</p>
+                <p>首先打开谷歌 play，先直接搜 chatgpt。</p>
+                <p>如果你没有，OK，那就点自己的右上角的头像，点设置。常规 - 账号和设备偏好设置 - 国家/地区和个人资料，你看看自己的 play 商店，是不是美国的（反正不能是香港）。如果是香港的话，那你先去挂一个美国节点的梯子，这个时候应该就可以直接切到美国的 play 商店，如果还是没有！那就先往下看。</p>
+                <p>然后你需要打开自己的电脑，登录自己的谷歌。找到支付选项，添加一个支付方式，就写自己办的 visa 和一个美国免税州地址（具体可以看 ios 里面的内容）</p>
+                <blockquote>如果有地址的话，需要一个美国免税州（打开你的浏览器，搜索美国免税州地址生成器）</blockquote>
+                <p>一般而言，你有了一个美国的 pay 的方案的话，你的商店的地区也会是美国。当然了你梯子最好也挂美国。如果还是不能切换的话，那……那去 b 站上看看教程吧（糟……）</p>
+                <p>反正最后就是你可以直接在 play 商店里面找到 chatgpt，那就大功告成了。然后我们就可以进行下一步。就是直接点开这个软件，然后买。</p>
+              </details>
+              <details class="nested-details">
+                <summary><span>方案 C</span>虚拟卡</summary>
+                <p>首先我必须声明一下：这个渠道是最不安全，风险最高的，大家谨慎考虑。</p>
+                <p>首先我们需要准备这样的一些东西，币安，和一个虚拟卡的平台（这里我使用的是 mpchat）。</p>
+                <p>到了这里，就有必要先讲一下为什么要用虚拟卡。因为 openai 的用的那个认证的公司，那个平台会拒绝中国发的卡，所以我们要用一个其他地区的卡。为什么上面用 google pay 就可以呢，因为 google pay 在中间中转，那个认证平台拿不到这张卡是什么地区发行的，所以可以支付。</p>
+                <p>然后就是说一下整个流程，用虚拟卡，给虚拟卡充 USDT（这是一种虚拟币，看名字就知道，金额上约等于一美刀），所以到时候在中间都会需要进行多次的中转，这些中转都需要手续费。比方说 CNY 买 USDT，转出需要手续费，USDT 转美刀需要手续费，美刀转其他货币需要手续费。</p>
+                <p>然后你用虚拟卡的话，你就需要在这些平台上上传自己的身份证和人脸信息。</p>
+                <p>具体的操作参考这个 docx 和这个视频吧：<a href="https://www.bilibili.com/video/BV1L7bw66EtJ?vd_source=3202142a93798baefc03647084ed79a0">【2026最新｜低价GPT Plus菲区订阅充值教程：982比索≈d107元，虚拟卡实测成功】</a>。</p>
+                <p>然后我补充一点，usdt 交易本质上是你和其他有这个货币的人交易，所以需要用到自己的微信和支付宝，需要和商家进行交流。</p>
+              </details>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer department-footer">
+      <div class="footer-brand">
+        <img class="brand-mark brand-logo" src="./assets/palu-app-icon.png" alt="" />
+        <div>
+          <strong>校园帕鲁 · 技术部 · 学习指南</strong>
+          <span>由技术部一起维护，慢慢生长。</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <a href="#main-content">回到顶部</a>
+        <a href="./index.html">返回首页</a>
+      </div>
+      <div class="footer-meta">
+        <span>由校园帕鲁工作室维护</span>
+        <a class="footer-filing" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">冀ICP备2023028483号-3</a>
+        <span>© <span data-year>2026</span> CAMPUS PALU</span>
+      </div>
+    </footer>
+  </body>
+</html>
