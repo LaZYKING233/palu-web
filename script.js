@@ -39,3 +39,13 @@ if (reduceMotion || !('IntersectionObserver' in window)) {
   }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
   revealItems.forEach((item) => observer.observe(item));
 }
+
+// 手册：跳到某个章节时顺手把它展开，否则会停在一行标题上
+const openChapter = (id) => {
+  const target = document.getElementById(id);
+  if (target?.tagName === 'DETAILS') target.open = true;
+};
+const chapterLinks = document.querySelectorAll('a[href^="#ch-"]');
+chapterLinks.forEach((link) => link.addEventListener('click', () => openChapter(link.hash.slice(1))));
+if (window.location.hash.startsWith('#ch-')) openChapter(window.location.hash.slice(1));
+
