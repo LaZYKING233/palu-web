@@ -668,17 +668,18 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 .path-list a b { flex: 0 0 auto; color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
 .path-list a:hover { padding-left: 8px; color: var(--purple); }
 
-/* 章节区：左侧常驻目录 + 右侧正文，把整幅宽度用起来，正文不贴在左边 */
-.chapters-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 800px); gap: clamp(40px, 5vw, 90px); align-items: start; }
-.ch-side { position: sticky; top: calc(var(--header-height) + 28px); }
-.ch-side > span { display: block; margin-bottom: 12px; padding-top: 12px; border-top: 1px solid var(--ink); color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; }
+/* 章节区：正文居中，目录收成左边一列小字。三栏等分保证正文正好落在屏幕中线 */
+.chapters-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 800px) minmax(0, 1fr); gap: clamp(24px, 3vw, 56px); align-items: start; }
+.ch-side { position: sticky; top: calc(var(--header-height) + 28px); grid-column: 1; justify-self: end; width: 100%; max-width: 176px; }
+.ch-side > span { display: block; margin-bottom: 8px; padding-top: 9px; border-top: 1px solid var(--ink); color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .1em; }
 .ch-side-nav { display: grid; }
-.ch-side-nav a { padding: 12px 0; display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: baseline; border-bottom: 1px solid var(--line); font-size: 15px; transition: color 180ms ease, padding 180ms ease; }
-.ch-side-nav a b { color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
-.ch-side-nav a:hover { padding-left: 8px; color: var(--purple); }
+.ch-side-nav a { padding: 8px 0; display: grid; grid-template-columns: 20px 1fr; gap: 6px; align-items: baseline; border-bottom: 1px solid rgb(23 21 31 / 10%); font-size: 12.5px; line-height: 1.5; transition: color 180ms ease, padding 180ms ease; }
+.ch-side-nav a b { color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .04em; }
+.ch-side-nav a:hover { padding-left: 5px; color: var(--purple); }
+.chapters-grid > .faq-list { grid-column: 2; }
 
-/* 结尾一节：正文与六条原则并排 */
-.craft-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); gap: clamp(44px, 5vw, 96px); align-items: start; }
+/* 结尾一节：正文与六条原则并排，整组居中 */
+.craft-grid { max-width: 1240px; margin-inline: auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr); gap: clamp(44px, 5vw, 96px); align-items: start; }
 .craft-grid .principles-list article { min-height: 0; padding: 22px 0; }
 .craft-grid .principles-list h3 { font-size: clamp(21px, 1.7vw, 28px); }
 .craft-grid .ch-body { max-width: none; padding-bottom: 0; }
@@ -754,9 +755,10 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 
 /* 手册阅读层的响应式 */
 @media (max-width: 1100px) {
-  /* 放不下两栏，目录退回成一行胶囊 */
-  .chapters-grid { grid-template-columns: 1fr; gap: 40px; }
-  .ch-side { position: static; }
+  /* 放不下三栏，目录退回成一行胶囊，正文占满 */
+  .chapters-grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .ch-side, .chapters-grid > .faq-list { grid-column: 1; }
+  .ch-side { position: static; justify-self: stretch; max-width: none; }
   .ch-side > span { display: none; }
   .ch-side-nav { display: flex; flex-wrap: wrap; gap: 9px; }
   .ch-side-nav a { padding: 7px 15px; grid-template-columns: auto auto; gap: 8px; border: 1px solid var(--ink); border-radius: 999px; font-size: 13px; font-weight: 700; }
