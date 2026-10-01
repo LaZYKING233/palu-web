@@ -670,11 +670,11 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 
 /* 章节区：正文居中，目录收成左边一列小字。三栏等分保证正文正好落在屏幕中线 */
 .chapters-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 800px) minmax(0, 1fr); gap: clamp(24px, 3vw, 56px); align-items: start; }
-.ch-side { position: sticky; top: calc(var(--header-height) + 28px); grid-column: 1; justify-self: end; width: 100%; max-width: 176px; }
-.ch-side > span { display: block; margin-bottom: 8px; padding-top: 9px; border-top: 1px solid var(--ink); color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .1em; }
+.ch-side { position: sticky; top: calc(var(--header-height) + 28px); grid-column: 1; justify-self: end; width: 100%; max-width: 236px; }
+.ch-side > span { display: block; margin-bottom: 10px; padding-top: 10px; border-top: 1px solid var(--ink); color: var(--muted); font-family: var(--mono); font-size: 10px; letter-spacing: .1em; }
 .ch-side-nav { display: grid; }
-.ch-side-nav a { padding: 8px 0; display: grid; grid-template-columns: 20px 1fr; gap: 6px; align-items: baseline; border-bottom: 1px solid rgb(23 21 31 / 10%); font-size: 12.5px; line-height: 1.5; transition: color 180ms ease, padding 180ms ease; }
-.ch-side-nav a b { color: var(--muted); font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .04em; }
+.ch-side-nav a { padding: 9px 0; display: grid; grid-template-columns: 24px 1fr; gap: 7px; align-items: baseline; border-bottom: 1px solid rgb(23 21 31 / 12%); font-size: 14px; line-height: 1.55; transition: color 180ms ease, padding 180ms ease; }
+.ch-side-nav a b { color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .04em; }
 .ch-side-nav a:hover { padding-left: 5px; color: var(--purple); }
 .chapters-grid > .faq-list { grid-column: 2; }
 
@@ -754,8 +754,8 @@ p, h1, h2, h3, ul, ol { margin-top: 0; }
 .ch-body td:first-child { font-weight: 700; }
 
 /* 手册阅读层的响应式 */
-@media (max-width: 1100px) {
-  /* 放不下三栏，目录退回成一行胶囊，正文占满 */
+@media (max-width: 1360px) {
+  /* 左右两栏塞不下 236px 的目录，目录退回成一行胶囊，正文占满 */
   .chapters-grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
   .ch-side, .chapters-grid > .faq-list { grid-column: 1; }
   .ch-side { position: static; justify-self: stretch; max-width: none; }
