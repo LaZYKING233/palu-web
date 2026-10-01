@@ -41,7 +41,7 @@
           <p class="dept-lead">这是一份写给所有人的 AI 编程入门文档。你不需要会写代码，但需要愿意动手。读完这六章，你会知道怎么让 AI 帮你把一个想法，变成真正能跑起来、也能交给别人接手的东西。</p>
           <div class="dept-hero-actions">
             <a class="button dept-button" href="#ch-01">从第一章开始</a>
-            <span>共 6 章 · 预计阅读 60 分钟</span>
+            <span>共 6 章 · 预计阅读 90 分钟</span>
           </div>
           <p class="dept-boundary"><strong>适合谁</strong><span>任何想用 AI 写东西的人，不限技术部、不限是否学过编程。内容公开，按需查阅，不必从头读到尾。</span></p>
         </div>
@@ -115,14 +115,101 @@
           <details id="ch-01" open>
             <summary><span>01 / 关于AI</span>第一章 · 关于 AI</summary>
             <div class="ch-body">
-              <p><strong>目标</strong>：把 LLM、Harness、Agent 这三个在 2026 年反复出现的概念讲清楚，并列出本方向最常用的一些编程语言。</p>
-              <p><strong>LLM（Large Language Model，大语言模型）</strong>：基于 Transformer 架构、在海量文本上预训练的概率模型。给定一段上下文，预测下一个 token，并以此生成连贯的自然语言或代码。它不检索事实，生成的是「最像合理继续」的文本，所以在事实性、数学性、确定性任务上可能出错，需要外部工具或人来兜底。2026 年的主流 LLM 已经普遍具备：长上下文（数十万到百万 token 量级）、工具调用（function calling / tool use）、多模态输入（文本 + 图像 + 音频 + 视频）、结构化输出（JSON / 代码）。这些能力本身不等于「Agent」，它们是 Agent 用来决策的「大脑」。</p>
-              <p><strong>Harness</strong>：包裹在 LLM 外面的运行时基础设施。2026 年流行的总结是 Agent = Model + Harness。LLM 本身是无状态的，不会主动调工具，也不保证自己写出的代码能跑；Harness 负责把这些事补上（管理会话、调度工具、维护上下文、持久化状态、隔离沙箱、设置权限与护栏）。判断一个系统是不是 Harness 的四个必要条件（arXiv 2606.10106）：① Agent Loop（推理 → 行动 → 观察 → 再推理的循环）；② Tool Interface（让模型能感知并修改外部环境）；③ Context Management（主动管理流入流出的信息）；④ Control Mechanisms（不依赖模型「愿不愿意服从」的限制、验证器、确定性处理）。LangGraph / CrewAI / AutoGen 这类「框架」是用来构建 Harness 的工厂，不是 Harness；Claude Agent SDK / OpenAI Agents SDK 是零件，不是 Harness。真正的 Harness 实例：Claude Code、Codex CLI、Aider、Cline、OpenHands、SWE-agent、Hermes Agent 等。</p>
-              <p><strong>Agent</strong>：「LLM + Harness」组合之后跑起来的系统形态。给定一个目标，自己决定下一步做什么、调用哪些工具、怎么验证结果，直到目标完成或触发停止条件。Agent 与「聊天机器人」、「RAG 检索增强」的根本差异是<strong>自治度</strong>：聊天机器人只回答一次；RAG 检索完就生成回答；Agent 检索、决策、执行、观察、再决策。2026 年主流 Agent 架构的四个角色：Planner（拆目标为子目标）、Executor（在当前状态下决定调用哪个工具的 LLM 调用，token 消耗大头）、Memory（短期 = 上下文窗口里的对话缓冲，长期 = 向量库/结构化数据库/文件）、Tools（网页搜索、代码解释器、数据库查询、文件操作、API、其他 Agent）。Anthropic 2024 年 12 月的《Building Effective Agents》还区分了 Agentic Workflow（开发者写好图，LLM 在节点里填内容）和 AI Agent（LLM 在运行时自己决定图的下一条边）。</p>
-              <p><strong>常用语言（按本项目使用频率排序）</strong>：JavaScript / TypeScript（小程序前端与构建工具链的事实标准）、Python（AI 工具链的事实标准：训练、推理、评测、agent 编排）、PHP（本项目后端云函数与 API）、SQL（从 PostgreSQL / MySQL 取数）、Shell（bash / PowerShell，构建、部署、调试绕不开）、Rust（新一代 AI 基础设施语言，Hermes Agent 本身、llama.cpp、tokenizers、Polars 等）、C / C++（底层推理引擎实现语言）、Mojo（Modular 出品、Python 语法的超集、能编译到原生机器码，2026 年仍是早期阶段）、Julia（科学计算与数值分析方向的语言）。入门优先级：JavaScript / TypeScript 与 Python 先扎实；SQL 与 Shell 同步学；PHP 看后端代码时跟着读；Rust / C++ 在真正碰到性能瓶颈或读底层代码时再深入；Mojo / Julia 了解即可。</p>
+              <p><strong>目标</strong>：把 LLM、Harness、Agent 这三个在 2026 年反复出现的概念讲清楚，并列出本方向最常用的一些编程语言。读完你应该能回答一个问题——<em>为什么光有 ChatGPT 还不够？</em></p>
+
+              <h3>一、LLM：会说话，但不做事</h3>
+              <p><strong>LLM（Large Language Model，大语言模型）</strong>是基于 Transformer 架构、在海量文本上预训练出来的概率模型。它的工作方式很朴素：给它一段上下文，它预测下一个词，然后把这个词接上去，再预测下一个，如此往复。</p>
+              <p>听起来太简单了，但正是这个简单的机制，产生了今天你看到的几乎所有 AI 能力。它生成的与其说是「正确答案」，不如说是<strong>「最像合理继续的文本」</strong>。</p>
+              <p>这个区别很重要，它解释了 LLM 的两个根本特性：</p>
+              <ul>
+                <li><strong>它不查资料。</strong>它不知道今天几号、不知道你公司内部的文件写了什么、不知道某个库上周刚改过 API。它只是根据训练时见过的模式往下接。所以它会一本正经地编造 API、编造文献、编造不存在的函数。</li>
+                <li><strong>它不保证正确。</strong>凡是需要精确、确定、可重复的任务（算 1000 位乘法、统计某个文件有几行、调用一个它没见过的接口），它都不可靠。</li>
+              </ul>
+              <p>好消息是，2026 年的主流 LLM 已经普遍具备下面这些能力：</p>
+              <div class="cards">
+                <div><b>长上下文</b><span>能一次读进几十万到上百万 token，等于把一整个项目装进一次对话。</span></div>
+                <div><b>工具调用</b><span>模型能输出「我要调用这个函数、参数是这些」的结构化请求。这是它能动手的前提。</span></div>
+                <div><b>多模态</b><span>不只读文字，还能看图、听音频、看视频片段。</span></div>
+                <div><b>结构化输出</b><span>能稳定地输出 JSON 或代码，而不只是散文。</span></div>
+              </div>
+              <div class="note">
+                <b>但这些能力本身还不等于「Agent」</b>
+                <p>它们是 Agent 用来做决定的<strong>大脑</strong>。一个只会想、不会动、也没有人替它兜底的大脑，还算不上能干活。</p>
+              </div>
+
+              <h3>二、Harness：给大脑接上身体</h3>
+              <p>LLM 本身是无状态的——它不记得上一次你说了什么（除非你把历史再贴一遍），不会主动去调工具，也保证不了自己写出的代码真能跑起来。</p>
+              <p>把这些事补上的那层基础设施，就叫 <strong>Harness</strong>。2026 年最流行的一句总结是：</p>
+              <blockquote>Agent = Model + Harness</blockquote>
+              <p>判断一个东西算不算 Harness，有四个必要条件（arXiv 2606.10106）：</p>
+              <div class="cards">
+                <div><b>① Agent Loop</b><span>推理 → 行动 → 观察结果 → 再推理的循环。关键在「观察」：每做完一步都要拿到真实反馈，而不是一口气写完就交差。</span></div>
+                <div><b>② Tool Interface</b><span>让模型能真实地感知和修改外部环境：读文件、写文件、跑命令、访问网络。没有工具，模型只能输出文字。</span></div>
+                <div><b>③ Context Management</b><span>决定每一轮把哪些内容喂给模型。项目结构、历史对话、报错信息，喂得准它才答得准。</span></div>
+                <div><b>④ Control Mechanisms</b><span>不依赖模型「愿不愿意服从」的限制：沙箱、权限、验证器、确定性检查。这是唯一不指望模型自律的安全层。</span></div>
+              </div>
+              <h4>哪些是 Harness，哪些不是</h4>
+              <p>这几个概念很容易混。看一张表就清楚了：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类别</th><th>是什么</th><th>例子</th></tr></thead>
+                  <tbody>
+                    <tr><td>模型</td><td>负责思考和生成</td><td>Claude、GPT、Gemini、DeepSeek</td></tr>
+                    <tr><td><strong>Harness</strong></td><td>把模型包起来，让它能真的干活</td><td>Claude Code、Codex、opencode、Hermes Agent</td></tr>
+                    <tr><td>框架</td><td>造 Harness 的工厂，你自己动手搭</td><td>LangGraph、CrewAI、AutoGen</td></tr>
+                    <tr><td>SDK / 零件</td><td>造 Harness 要用的零件库</td><td>Claude Agent SDK、OpenAI Agents SDK</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>所以当你看到「XX 框架」「XX SDK」时，它<strong>不是一个能直接用的工具</strong>，你还得自己把四个必要条件搭齐。而 Claude Code 这种开箱即用的，才是 Harness。</p>
+
+              <h3>三、Agent：跑起来的完整系统</h3>
+              <p><strong>Agent</strong> 是「模型 + Harness」组合之后跑起来的形态。给定一个目标，它自己决定下一步做什么、调哪个工具、怎么验证结果，一直干到目标完成或触发停止条件。</p>
+              <p>它和另外两种东西的区别，核心在<strong>自治度</strong>：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>形态</th><th>它做了什么</th><th>谁在决定下一步</th></tr></thead>
+                  <tbody>
+                    <tr><td>聊天机器人</td><td>回答一次</td><td>人问一句，它答一句</td></tr>
+                    <tr><td>RAG 检索增强</td><td>先检索资料，再生成回答</td><td>流程写死，人来触发</td></tr>
+                    <tr><td><strong>Agent</strong></td><td>检索、决策、执行、观察、再决策，循环往复</td><td><strong>模型自己</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h4>2026 年主流 Agent 的四个角色</h4>
+              <div class="terms">
+                <div><dt>Planner 规划</dt><dd>把大目标拆成一个个能独立完成的小目标。</dd></div>
+                <div><dt>Executor 执行</dt><dd>在当前状态下决定调用哪个工具的那次 LLM 调用。这里是 token 消耗的大头。</dd></div>
+                <div><dt>Memory 记忆</dt><dd>短期 = 上下文窗口里的对话缓冲；长期 = 向量库、结构化数据库，或者就是你硬盘上的文件。</dd></div>
+                <div><dt>Tools 工具</dt><dd>网页搜索、代码解释器、数据库查询、文件操作、API，甚至另一个 Agent。</dd></div>
+              </div>
+              <p>Anthropic 在 2024 年 12 月的《Building Effective Agents》里还做了一个更细的区分：<strong>Agentic Workflow</strong>（开发者预先画好流程图，LLM 只在节点里填内容）和 <strong>AI Agent</strong>（LLM 在运行时自己决定走流程图的哪条边）。前者更可控，后者更灵活，但更难预测。</p>
+
+              <h3>四、常用语言</h3>
+              <p>按本项目的实际使用频率排序：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>语言</th><th>用在哪</th></tr></thead>
+                  <tbody>
+                    <tr><td>JavaScript / TypeScript</td><td>小程序前端与构建工具链的事实标准</td></tr>
+                    <tr><td>Python</td><td>AI 工具链的事实标准：训练、推理、评测、Agent 编排</td></tr>
+                    <tr><td>PHP</td><td>本项目的后端云函数与 API</td></tr>
+                    <tr><td>SQL</td><td>从 PostgreSQL / MySQL 取数</td></tr>
+                    <tr><td>Shell</td><td>bash / PowerShell，构建、部署、调试绕不开</td></tr>
+                    <tr><td>Rust</td><td>新一代 AI 基础设施语言：llama.cpp、tokenizers、Polars</td></tr>
+                    <tr><td>C / C++</td><td>底层推理引擎的实现语言</td></tr>
+                    <tr><td>Mojo</td><td>Modular 出品，Python 语法的超集、能编译到原生机器码，2026 年仍属早期</td></tr>
+                    <tr><td>Julia</td><td>科学计算与数值分析方向</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="note">
+                <b>零基础的入门顺序</b>
+                <p><strong>JavaScript / TypeScript 和 Python 先扎实</strong>——这两个学会了，剩下的大多能看懂。SQL 和 Shell 同步跟着学，因为它们绕不开。PHP 在你看后端代码时顺便跟上。<strong>Rust 和 C++ 放到真正碰到性能瓶颈、或者需要读底层代码时再深入</strong>，现在学性价比很低。Mojo 和 Julia 了解即可，知道它们存在、解决什么问题就行。</p>
+              </div>
               <div class="note">
                 <b>这一章最重要的一句话</b>
-                <p>模型只会「说」，Harness 让它能「做」。读下一章之前记住这句：<strong>Agent = Model + Harness</strong>。下面讲的就是 Harness 到底长什么样、怎么用。</p>
+                <p>模型只会「说」，Harness 让它能「做」。记住 <strong>Agent = Model + Harness</strong>，第三章讲的就是 Harness 到底长什么样、有哪些、该怎么选。</p>
               </div>
             </div>
           </details>
@@ -196,41 +283,216 @@
           <details id="ch-03">
             <summary><span>03 / HARNESS</span>第三章 · Harness：让 AI 真正动手</summary>
             <div class="ch-body">
-              <p><strong>目标</strong>：搞清楚 Harness 是什么、为什么不能只用网页版聊天，以及怎么在电脑上装一个能真正读写文件、跑命令的 AI 编程助手。</p>
+              <p><strong>目标</strong>：搞清楚 Harness 是什么、现在到底有哪些、每个怎么用、有什么优缺点，以及怎么挑一个适合自己的。</p>
 
-              <h3>一句话理解 Harness</h3>
-              <p>上一章说过，LLM 是「大脑」，Harness 是「身体」。大脑能想，但手不能动、眼睛不能看、耳朵不能听。Harness 就是把这副身体接上去的那层运行时。</p>
-              <p>你在 ChatGPT 网页框里聊天的时候，那基本只有一个大脑。而 Claude Code、Codex 这类工具才是完整的身体：它能读你硬盘上的文件、能改代码、能在终端里跑命令、能把报错信息再读一遍。</p>
-              <p>这就是本章存在的理由：<strong>想让 AI 帮你做实事，就得用 Harness，只用网页版聊天是做不到的。</strong></p>
+              <h3>一、先回到那句话</h3>
+              <p>上一章的结论是：<strong>Agent = Model + Harness</strong>。模型是脑子，Harness 是身体。</p>
+              <p>你在 ChatGPT 网页框里聊天的时候，那基本只有一个脑子——能想、能写，但<strong>碰不到你硬盘上的任何东西</strong>。而 Claude Code、Codex、opencode 这类工具才是完整的身体：它们能读你项目里的文件、能改代码、能在终端里跑命令、能把报错信息再读一遍，然后自己决定下一步怎么办。</p>
+              <p>所以这一章要回答的是：<strong>这些身体现在有多少个？分别长什么样？该选哪个？用了有什么代价？</strong></p>
+              <p>先说结论中的结论：<em>如果你是零基础，Claude Code 和 Codex 这两家的桌面端都很好用，图形界面、不用碰终端，二选一即可。</em>剩下的等你有需要再看。</p>
 
-              <h3>Harness 到底在干什么</h3>
-              <p>四件事，对应上一章说的四个必要条件：</p>
-              <div class="cards">
-                <div><b>循环</b><span>想 → 做 → 看结果 → 再想。模型每做一步都会拿到真实反馈，而不是一口气把代码全写完就交差。</span></div>
-                <div><b>工具</b><span>把「读文件」「改文件」「跑命令」「上网」包装成模型能调用的东西。没有工具，模型只能输出文字。</span></div>
-                <div><b>上下文</b><span>决定每一轮把哪些内容喂给模型：项目结构、历史对话、报错信息。喂得准，它就答得准。</span></div>
-                <div><b>权限</b><span>决定它能碰什么、哪些动作必须先问你。这是 Harness 里唯一不能省的安全机制。</span></div>
+              <h3>二、现在的 Harness 有哪些</h3>
+              <p>2026 年这个赛道非常拥挤，而且<strong>变动极快</strong>。先按「钱怎么花」分三类，这决定了它们的性格：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型</th><th>代表</th><th>特点</th></tr></thead>
+                  <tbody>
+                    <tr><td>闭源订阅制</td><td>Claude Code、Codex</td><td>装完登录就能用，费用走订阅额度。上手最简单，但代码要上云</td></tr>
+                    <tr><td>开源 + 自备 key</td><td>opencode、Goose、Cline、DSH</td><td>软件免费开源，你自己找模型服务商的 API key。更自由，但要自己配</td></tr>
+                    <tr><td>开源 + 自托管</td><td>OpenHands、Hermes Agent</td><td>连模型都可以自己部署。控制力最强，门槛也最高</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="note note-warn">
+                <b>装之前先看这个：三个已经被淘汰的「流行推荐」</b>
+                <p>这个领域死过的项目比你想象的多，网上很多教程还在推它们：</p>
+                <ul>
+                  <li><strong>Roo Code</strong>——VS Code 插件，<strong>2026 年 5 月 15 日已停止服务</strong>，仓库归档。</li>
+                  <li><strong>Windsurf</strong>——2025 年 7 月被 Cognition 收购，<strong>作为独立产品已经不存在了</strong>，官网现在直接跳转到 devin.ai。</li>
+                  <li><strong>SWE-agent</strong>——官方已说明被 mini-swe-agent 取代，进入只维护不开发的状态。</li>
+                </ul>
+                <p>判断一个项目还活不活跃，最直接的办法是<strong>去 GitHub 看最后一次提交是什么时候</strong>，比看任何榜单都准。</p>
               </div>
 
-              <h3>先认识两个最主流的</h3>
-              <div class="terms">
-                <div>
-                  <dt>Claude Code</dt>
-                  <dd>Anthropic 出品，跑在终端里。读 <code>CLAUDE.md</code> 作为项目说明书。生态最成熟，插件和文档最多。</dd>
-                </div>
-                <div>
-                  <dt>Codex</dt>
-                  <dd>OpenAI 出品，同样跑在终端里。有终端版、桌面版、IDE 插件、网页版和云端版五个入口，本质是同一个东西。读 <code>AGENTS.md</code>。</dd>
-                </div>
-                <div>
-                  <dt>AGENTS.md</dt>
-                  <dd>两者都是「给 AI 看的 README」。2025 年底起它变成了跨厂商的开放格式，Codex、Cursor、Gemini CLI、Copilot 等二十多个工具都读它，写一份就够。</dd>
-                </div>
-              </div>
-              <p>好消息是它们在互相兼容：Claude Code 从 2.1.277 起，如果仓库里只有 <code>AGENTS.md</code> 没有 <code>CLAUDE.md</code>，它会直接读 <code>AGENTS.md</code>。所以你先学哪个都行，不用纠结。</p>
+              <h3>三、Claude Code：四种形态</h3>
+              <p>Claude Code 是 Anthropic 的产品。<strong>它是闭源的</strong>——你装到的是一个编译好的二进制文件，看不到源码。但它有四种形态，而且<strong>是同一个引擎</strong>，配置、记忆、订阅全部互通，只在「界面长什么样、能干什么额外的事」上有差别。</p>
+              <p>这一点很重要：<strong>你不需要在四种里做单选题</strong>。它们是同一个大脑的四个窗口，用同一份订阅、同一套配置，随时可以换。</p>
 
-              <h3>装一个</h3>
-              <p>先装 Claude Code。如果你更习惯 ChatGPT 的界面，直接跳到本章末尾看 Codex 的装法。</p>
+              <details class="nested-details">
+                <summary><span>形态 A</span>命令行版（CLI）</summary>
+                <p>在终端里运行 <code>claude</code>，它直接读你的文件、改文件、跑命令。装法在后面「上手」那一节有。</p>
+                <p>除了日常对话，它还有两个能力是别的地方没有的：</p>
+                <ul>
+                  <li>
+                    <strong>一次性非交互模式（headless）</strong>：<code>-p</code> 让它跑完一个任务就退出，适合写进脚本或者 CI。
+                    <pre><code># 跑一次就退出
+claude -p "解释这个函数在做什么"
+
+# 限制轮次和花费，防止跑飞
+claude -p --max-turns 3 --max-budget-usd 5.00 "检查有没有语法错误"</code></pre>
+                  </li>
+                  <li>
+                    <strong>手机远程遥控</strong>：<code>claude remote-control</code> 之后，你可以在手机上看着并回复这个会话。需要说明的是——<strong>它一直跑在你自己的电脑上</strong>，手机只是个查看和回复的窗口，你的代码和文件系统没有离开本机。这和「Claude Code on the web」不是一回事，后者跑在 Anthropic 的云端。
+                  </li>
+                </ul>
+                <p><strong>什么时候用命令行版：</strong>你在用 SSH 连服务器、在容器里、或者想写脚本批量跑任务。这三种情况命令行版是唯一选择。反过来，如果你看见终端就头疼，那就别用。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 B</span>桌面端（Code 标签）</summary>
+                <p>很多人以为「Claude Code 只是个命令行工具」，这是误解。<strong>它有桌面应用</strong>，准确说是 <strong>Claude Desktop 里的 Code 标签页</strong>——同一个应用里有三个标签：<strong>Chat</strong>（普通聊天）、<strong>Cowork</strong>（长时间的自主任务）、<strong>Code</strong>（写代码，你要找的在这个里）。</p>
+                <p>最关键的一点：<strong>桌面端能直接读写你电脑上的项目文件</strong>，不是只能生成代码让你复制粘贴。选一个 Environment（Local / Cloud / SSH / WSL），指定项目文件夹，它就在真实的环境里干活。</p>
+                <p>它比命令行版多了这些图形化能力：</p>
+                <div class="cards">
+                  <div><b>Diff 审阅</b><span>改动逐个文件显示，<strong>可以点某一行直接写评论</strong>，它读到评论再去改。这是命令行版没有的。</span></div>
+                  <div><b>内置终端</b><span>和 Claude 共享同一环境，跑 <code>npm test</code> 看到的是同一批文件。</span></div>
+                  <div><b>文件编辑器</b><span>点路径直接改、保存回磁盘。</span></div>
+                  <div><b>分屏布局</b><span>对话、diff、终端、浏览器、文件任意拖拽排列，还能弹成独立窗口。多任务并行时很关键。</span></div>
+                </div>
+                <p><strong>会话能不能在两端接着聊？</strong>能，但要注意规则：两边<strong>共享</strong> CLAUDE.md、MCP、Skills、设置这些配置，<strong>但各自维护自己的会话列表</strong>。会话可以用 <code>/desktop</code> 从命令行搬进桌面端，也能从桌面端捡回命令行——搬的是同一个会话，不是副本。</p>
+                <p><strong>桌面端没有的：</strong>它是纯交互的，<strong>没有 <code>-p</code> 那种非交互模式</strong>，所以不能写进 CI。另外它默认只连 Anthropic 自己的模型，不能切到第三方。</p>
+                <p><strong>什么时候用桌面端：</strong>你不想碰终端、想一次开几个任务并行做、想图形化看 diff。这三种情况它明显比命令行版舒服。<strong>零基础强烈建议从桌面端开始。</strong></p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 C</span>IDE 插件（VS Code / JetBrains）</summary>
+                <p>在编辑器里直接用。VS Code 上它是官方推荐的方式：内联 diff、计划审查、用 <code>@</code> 引用你选中的几行、能翻历史会话。适合「我本来就整天开着 VS Code 写代码」的人。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 D</span>云端（claude.ai/code）</summary>
+                <p>跑在 Anthropic 的服务器上，关掉本地电脑也在跑。适合长任务。代价是<strong>它看不到你本地的东西</strong>——你得把项目传上去，而且它在上面也用不了你本地的 MCP 和工具。</p>
+              </details>
+
+              <h3>四、Codex：同样四种形态</h3>
+              <p>Codex 是 OpenAI 的产品，<strong>CLI 部分是完全开源的</strong>（Apache-2.0 协议，仓库在 <code>github.com/openai/codex</code>，用 Rust 写的）。这一点和 Claude Code 正好相反，值得知道。</p>
+              <p>它同样有命令行、桌面、网页、云端、IDE 插件，<strong>共用一份 <code>AGENTS.md</code> 和同一份登录凭据</strong>。</p>
+
+              <details class="nested-details">
+                <summary><span>形态 A</span>Codex CLI（命令行）</summary>
+                <p>装好后在项目目录里运行 <code>codex</code>。它有两个非交互命令是重点：</p>
+                <ul>
+                  <li>
+                    <strong><code>codex exec</code></strong>——跑一次就退出，进度走 stderr，只有最终结果走 stdout，写脚本用这个。
+                    <pre><code>codex exec "把这个函数改成异步并补上错误处理"
+
+# 沙箱默认只读，要写文件得显式放开
+codex exec --sandbox workspace-write "修复测试失败"
+
+# 强制输出结构化 JSON
+codex exec --output-schema schema.json "统计代码行数"</code></pre>
+                  </li>
+                  <li>
+                    <strong><code>codex review</code></strong>——非交互式代码审查。可以针对未提交的改动、某个 commit、或者和某个分支的差异。
+                  </li>
+                </ul>
+                <p>新手最该记的斜杠命令：<code>/init</code>（生成 <code>AGENTS.md</code>）、<code>/plan</code>（先出方案再动手）、<code>/review</code>（审查改动）、<code>/permissions</code>（设权限）、<code>/status</code>（看状态）。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 B</span>ChatGPT 桌面端里的 Codex</summary>
+                <p>这一形态最容易被误解。官方原话是：<strong>Codex 在 ChatGPT 桌面应用里是一个「独立视图」</strong>。具体指三件事：</p>
+                <div class="terms">
+                  <div><dt>历史完全分开</dt><dd>你在 ChatGPT 里的聊天记录找不到 Codex 的对话，反过来也一样。Codex 有自己的侧边栏和历史。</dd></div>
+                  <div><dt>不同步到网页和手机</dt><dd>Chat 和 Work 的历史在网页、手机、桌面之间是同步的，<strong>Codex 不会</strong>。手机上只能通过一个 Remote 标签看部分会话，而且那些不会变成手机上的聊天记录。</dd></div>
+                  <div><dt>不是聊天功能</dt><dd>官方明确说它能操作本地文件夹、代码仓库、终端和开发工具。</dd></div>
+                </div>
+                <p>补充一个背景：OpenAI 在 2026 年把原来独立的 Codex 桌面应用并进了 ChatGPT 桌面应用。<strong>合并的是外壳，不是历史</strong>——所以你在老文章里看到的「Codex App」，现在指的就是这个 Codex 视图。</p>
+                <p><strong>什么时候用这个形态：</strong>你已经有 ChatGPT 订阅，想在一个图形界面里审 diff、同时盯几个任务，不想再装别的软件。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 C</span>Codex Cloud（云端）</summary>
+                <p>跑在 OpenAI 的云端机器上。<strong>你的电脑睡着甚至关掉，它照样在干活。</strong>你需要一个环境配置（选一个 GitHub 仓库，它自己装依赖、跑测试验证），发布之后就能反复起任务，每个任务有独立的工作区。</p>
+                <p>适合电脑要关、任务要跑很久、或者需要拿凭据访问私有服务的场景。<strong>注意：Codex Cloud 只能用 ChatGPT 账号登录，不支持 API key</strong>，而且要 Plus 及以上的套餐。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>形态 D</span>IDE 插件</summary>
+                <p>支持 VS Code 系（VS Code、Cursor、Windsurf 这些编辑器）、Xcode 和 JetBrains。三个卖点是：能引用你当前打开的文件和选中的代码、就地看 diff 审改动、把长任务甩给云端。定位是「在你正在看的那段代码旁边干活」。</p>
+              </details>
+
+              <div class="note">
+                <b>一个好消息：AGENTS.md 两边都能用</b>
+                <p>Claude Code 从 2.1.277 版起，如果项目里只有 <code>AGENTS.md</code> 而没有 <code>CLAUDE.md</code>，它会直接读 <code>AGENTS.md</code>。所以<strong>一个项目只维护一份说明文件就够，两家工具都认</strong>。</p>
+                <p>两个坑：① 如果 <code>AGENTS.md</code> 和 <code>CLAUDE.md</code> 同时存在，Claude Code <strong>只读后者</strong>；② 加一个 <code>CLAUDE.local.md</code> 会<strong>静默地让 <code>AGENTS.md</code> 停止加载</strong>。所以最省心的做法是：只用 <code>AGENTS.md</code>，别建 <code>CLAUDE.md</code>。</p>
+              </div>
+
+              <h3>五、其他几个值得知道的</h3>
+              <p>除了上面两家主流的，还有几个在开源社区里很活跃的工具。了解它们有助于你看懂这个领域，但<strong>零基础暂时不用装</strong>。</p>
+
+              <details class="nested-details">
+                <summary><span>opencode</span>模型无关的开源 Harness</summary>
+                <p><strong>一句话</strong>：一个模型无关的开源 Harness，你想接哪家模型就接哪家。</p>
+                <p>它的特点是<strong>不绑定任何一家模型服务商</strong>——通过 Models.dev 支持 75 家以上，也能自己填任意 OpenAI 兼容端点，本地模型（Ollama、LM Studio、llama.cpp）也能接。由 Anomaly 公司开发，MIT 协议开源。</p>
+                <p>形态是终端界面（TUI）+ 桌面端 + 常见 IDE 的插件 + 网页版。它的规则文件也叫 <code>AGENTS.md</code>（同时兼容读取 <code>CLAUDE.md</code>）。</p>
+                <p><strong>适合谁：</strong>想自由切换模型、或者想在同一个工具里同时用好几家模型的人。<strong>代价</strong>：你要自己准备 API key 并配置，开箱即用性不如订阅制产品。</p>
+                <p><em>注意别搞错：</em>它和 OpenAI <strong>没有任何关系</strong>，纯粹是名字撞了。GitHub 上还有一个同名的无关项目（Go 写的），已经归档改名了。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>Hermes Agent</span>会自己沉淀经验的常驻助手</summary>
+                <p><strong>先破除一个常见误解：Hermes Agent 不是模型，是 Harness。</strong>Nous Research 出了一系列叫 Hermes 的<strong>模型</strong>，也出了一个叫 Hermes Agent 的<strong>智能体外壳</strong>，两者是不同层面的东西——外壳可以换任意模型。</p>
+                <p>它和普通 coding agent 最大的区别在<strong>它会积累经验</strong>：普通 harness 每次会话都从零开始；Hermes Agent 会把做过的事自动整理成技能文件、记忆和用户画像，<strong>下次直接复用</strong>。注意这是<strong>文本层</strong>的改进，它不修改任何模型权重——另外它还能批量生成训练数据，去训练别家模型的工具调用能力。</p>
+                <p>它通过一个 gateway 进程接入了 20 多个平台（Telegram、Discord、Slack、飞书、钉钉、微信等），可以自己部署。</p>
+                <p><strong>适合谁：</strong>想要一个长期在线、能从手机各个 App 找到的个人助手。<strong>不适合：</strong>只想安静写代码的人——它比纯 coding agent 重得多。</p>
+                <div class="note">
+                  <b>一个正好能说明「Harness ≠ 模型」的例子</b>
+                  <p>Nous 官方文档明确写着：<strong>不建议在 Hermes Agent 里使用 Hermes 4 模型</strong>，因为 Hermes 4 是为「聊天和推理」调优的，不是为 Agent 依赖的那种高频工具调用循环调优的。同一个外壳，换个模型就不好用了——这就是模型和 Harness 是两回事的直接证据。</p>
+                </div>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>DSH</span>DeepSeek 官方的开源 Harness</summary>
+                <p><strong>它确实存在</strong>，是 DeepSeek 官方做的开源 agent 外壳，仓库是 <code>deepseek-ai/deepseek-harness</code>，命令叫 <code>dsh</code>，MIT 协议，TypeScript 写的，2026 年 8 月发布。它的口号是「Everything is a Plugin」，架构上几乎所有东西都是插件。</p>
+                <p>形态有网页界面、桌面端、命令行和 Python SDK。<strong>和 DeepSeek 模型的关系要说明白：DSH 是外壳，不是模型</strong>——官方文档里从来没有出现 <code>deepseek-chat</code> 或 <code>deepseek-reasoner</code> 这两个名字。填入 DeepSeek 的 API key 就能用 DeepSeek 的模型，但它<strong>同时也能接 Claude、GPT、Kimi、GLM 等第三方模型</strong>，还支持自定义端点（OpenAI 和 Anthropic 两种协议都支持，所以 Ollama、vLLM 都能接）。</p>
+                <p><strong>但是，重要提醒：</strong>它的仓库顶部写着一句 <strong>「THERE WILL BE COMPATIBILITY-BREAKING CHANGES」</strong>，安全文档里写得更直白——<strong>它没有经过安全审计，不能当作安全或可用于生产环境的软件</strong>。所有发布版本都还是 rc / alpha 阶段。</p>
+                <p><strong>适合谁：</strong>想研究 agent 架构、想写插件、想用第三方模型跑 coding agent 的开发者。<strong>不适合：</strong>日常写代码，更不要用在生产环境。</p>
+              </details>
+
+              <h4>还有些活跃的，记住名字就行</h4>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>工具</th><th>形态</th><th>协议</th><th>一句话</th></tr></thead>
+                  <tbody>
+                    <tr><td>Cline</td><td>VS Code / JetBrains 插件、CLI</td><td>Apache-2.0</td><td>开源插件里最活跃的一个</td></tr>
+                    <tr><td>OpenHands</td><td>网页 + Python SDK + CLI</td><td>MIT</td><td>偏平台和研究方向，可完全自托管</td></tr>
+                    <tr><td>Goose</td><td>桌面端 + CLI</td><td>Apache-2.0</td><td>开源免费，已移交 Linux 基金会旗下</td></tr>
+                    <tr><td>Zed</td><td>桌面编辑器</td><td>GPL-3.0</td><td>编辑器本体免费，AI 功能单独收费</td></tr>
+                    <tr><td>Aider</td><td>命令行</td><td>开源</td><td>老牌工具，但更新已经明显放缓</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <h3>六、怎么选</h3>
+              <p>按你的情况对号入座：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>你是这种情况</th><th>选它</th></tr></thead>
+                  <tbody>
+                    <tr><td>完全零基础，不想碰终端</td><td><strong>Claude Code 桌面端</strong> 或 <strong>ChatGPT 桌面端里的 Codex</strong>，二选一</td></tr>
+                    <tr><td>已经在用 ChatGPT 订阅，不想再掏钱</td><td>Codex CLI 或桌面端 Codex（Codex 本体包含在所有套餐里）</td></tr>
+                    <tr><td>在服务器 / 容器 / SSH 上干活</td><td>命令行版，桌面端帮不上忙</td></tr>
+                    <tr><td>要写脚本、进 CI、批量跑</td><td>命令行版（<code>claude -p</code> / <code>codex exec</code>）</td></tr>
+                    <tr><td>电脑要关，任务还得继续</td><td>Codex Cloud，或 Claude Code 的云端模式</td></tr>
+                    <tr><td>想随时换模型、用本地模型</td><td>opencode</td></tr>
+                    <tr><td>想要常驻的跨平台个人助手</td><td>Hermes Agent</td></tr>
+                    <tr><td>想研究 agent 架构、写插件</td><td>DSH（<strong>但它还是预览版，别用于生产</strong>）</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="note note-warn">
+                <b>比功能更要紧的一件事：你的代码会不会上云</b>
+                <p>「本地运行」这个词有歧义，务必分清两层：</p>
+                <ul>
+                  <li><strong>Harness 跑在哪</strong>——比如 Claude Code 桌面端选 Local 模式，程序跑在你电脑上。</li>
+                  <li><strong>模型跑在哪</strong>——只要接的是云端模型，<strong>你的代码照样会发给模型服务商</strong>。</li>
+                </ul>
+                <p>只有当你连模型也用本地的（Ollama、LM Studio 这类）时，代码才真正不离开你的电脑。用公司代码、同学的信息、或者任何涉及隐私的东西之前，先想清楚这一层。</p>
+              </div>
+
+              <h3>七、装一个并跑起来</h3>
+              <p>先装 Claude Code。如果你更习惯 ChatGPT 的界面，跳到本章末尾看 Codex 的装法。</p>
               <pre><code># macOS / Linux / WSL
 curl -fsSL https://claude.ai/install.sh | bash
 
@@ -239,12 +501,7 @@ irm https://claude.ai/install.ps1 | iex
 
 # 装完先确认
 claude --version</code></pre>
-              <div class="note">
-                <b>用原生安装器的理由</b>
-                <p>原生安装器会自动更新。用 Homebrew、WinGet 装的不会，得自己记得升级。新手最容易踩的坑就是三个月后版本太旧，行为和文档对不上。</p>
-              </div>
-
-              <h3>第一次用，按这四步走</h3>
+              <p>第一次用，按这四步走：</p>
               <ol class="steps">
                 <li>
                   <p><strong>进到项目目录再启动。</strong>务必先 <code>cd</code> 到你要改的项目里，再运行 <code>claude</code>。它只在你当前所在的位置工作，在哪启动就管哪。</p>
@@ -262,18 +519,28 @@ claude</code></pre>
                   <p><strong>退出用 <code>/exit</code>。</strong>或者在空提示符下连按两次 <code>Ctrl+D</code>。</p>
                 </li>
               </ol>
+              <h4>那 Codex 怎么装</h4>
+              <pre><code># macOS / Linux（官方推荐）
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
 
-              <h3>真正的工作循环：先看计划，再让它动手</h3>
-              <p>新手最容易犯的错，是一上来就说「帮我把这个功能做了」，然后看着它一口气改了几十个文件，最后你根本不知道它改了什么。</p>
-              <p>正确的顺序是先要方案：</p>
-              <pre><code>/plan 给首页加一个搜索框，能按课程名过滤</code></pre>
-              <p>它会给出计划但<strong>不动手改</strong>。你看完觉得靠谱，再让它执行。也可以在启动时就锁成只读模式：</p>
-              <pre><code>claude --permission-mode plan</code></pre>
-              <p>这套「先计划、后执行」的流程是 OpenAI 官方在最佳实践里明确推荐的，理由很简单：<strong>看不懂的计划，不该被执行。</strong></p>
+# Windows（PowerShell）
+powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
 
-              <h3>权限确认是安全带，不是麻烦</h3>
-              <p>你每次看到它问「是否允许执行 xxx」，那是在问你一个问题：<em>你允许我动你的电脑吗？</em></p>
-              <p>这不是多余的步骤。AI 能执行任意终端命令，一旦判断错，可能删掉文件、把你的密钥推到网上、或者连上一个不该连的服务器。这一层人工确认，是目前唯一可靠的安全兜底。</p>
+# 登录：推荐用 ChatGPT 账号，不用单独买 API key
+codex login
+
+# 然后照旧 cd 到项目里再运行
+cd ~/projects/my-app
+codex</code></pre>
+              <p>（如果 <code>codex login</code> 提示找不到命令，直接运行 <code>codex</code>，它第一次启动会引导你选登录方式，效果一样。）</p>
+              <div class="note note-warn">
+                <b>一个真实的坑：别装错包</b>
+                <p>如果你用 npm，<strong>必须带 <code>@openai/</code> 前缀</strong>：<code>npm install -g @openai/codex</code>。写成 <code>npm install -g codex</code> 会装到一个 2011 年的同名静态站点生成器上，而它<strong>装完之后 <code>codex</code> 命令居然能正常执行</strong>——很多人就这么以为自己装成功了。</p>
+              </div>
+
+              <h3>八、权限：唯一的安全带</h3>
+              <p>你每次看到它问「是否允许执行 xxx」，那是在问你：<em>你允许我动你的电脑吗？</em></p>
+              <p>这不是多余的步骤。AI 能执行任意终端命令，一旦判断错，可能删掉文件、把密钥推到网上、或者连上一个不该连的服务器。这一层人工确认，是目前唯一可靠的安全兜底。</p>
               <p>会话中按 <code>Shift+Tab</code> 可以在几种模式之间循环：</p>
               <div class="table-wrap">
                 <table>
@@ -288,10 +555,10 @@ claude</code></pre>
               </div>
               <div class="note note-warn">
                 <b>新手不要跳过权限</b>
-                <p>Claude Code 有个 <code>--dangerously-skip-permissions</code> 参数，名字里就写了 dangerous。它存在的唯一合理场景，是在开完就扔的一次性容器里跑批处理。在自己电脑上用，等于把家里钥匙交给一个你没见过的人。</p>
+                <p>Claude Code 有个 <code>--dangerously-skip-permissions</code> 参数，名字里就写了 dangerous。它存在的唯一合理场景，是在开完就扔的一次性容器里跑批处理。<strong>在自己电脑上用，等于把家里钥匙交给一个你没见过的人。</strong></p>
               </div>
 
-              <h3>给它写一份项目说明书</h3>
+              <h3>九、给它写一份项目说明书</h3>
               <p>每次都重新解释一遍项目很烦。Harness 支持一个 Markdown 文件，写在项目根目录，每次启动自动读取，团队成员共享。</p>
               <div class="table-wrap">
                 <table>
@@ -299,18 +566,13 @@ claude</code></pre>
                   <tbody>
                     <tr><td>Claude Code</td><td><code>CLAUDE.md</code> 或 <code>AGENTS.md</code></td><td>当前项目，随仓库提交</td></tr>
                     <tr><td>Codex</td><td><code>AGENTS.md</code></td><td>当前项目，随仓库提交</td></tr>
+                    <tr><td>opencode</td><td><code>AGENTS.md</code></td><td>当前项目，随仓库提交</td></tr>
                     <tr><td>Claude Code</td><td><code>~/.claude/CLAUDE.md</code></td><td>你自己的所有项目</td></tr>
                     <tr><td>Codex</td><td><code>~/.codex/AGENTS.md</code></td><td>你自己的所有项目</td></tr>
                   </tbody>
                 </table>
               </div>
-              <p>让工具帮你写第一版，比自己憋着强：</p>
-              <pre><code># Claude Code
-/init
-
-# Codex
-/init</code></pre>
-              <p>它会扫描项目，自动生成一份初始版本。之后你可以手动补充成这样：</p>
+              <p>让工具帮你写第一版，比自己憋着强——在会话里输入 <code>/init</code>，它会扫描项目自动生成一份。之后你可以手动补充成这样：</p>
               <pre><code># AGENTS.md
 
 ## 怎么跑起来
@@ -327,72 +589,78 @@ claude</code></pre>
                 <b>写说明书的两条原则</b>
                 <p>第一，写可验证的事实，不要写形容词。写「2 空格缩进」而不是「代码风格良好」。<strong>第二，别把它写太长</strong>，超过 200 行它会只读一部分。一次性操作流程写成 Skill（下一章），别塞进这里。</p>
               </div>
-
-              <h3>顺手：让它在独立副本上干活</h3>
-              <p>如果你想同时做两件事，Claude Code 支持 worktree——给这次会话开一份独立的代码副本，在另一个分支上，互不干扰：</p>
+              <p>还有一个很顺手的能力：<strong>让它在独立副本上干活</strong>。如果你想同时做两件事，可以给它开一份独立的代码副本，在另一个分支上，互不干扰：</p>
               <pre><code>claude --worktree feature-login</code></pre>
               <p>文件会放在 <code>.claude/worktrees/feature-login/</code>。适合「让 AI 改 A 功能，你同时改 B 功能」这种并行场景。团队多人同时开发时也建议这么干。</p>
 
-              <h3>那 Codex 怎么装</h3>
-              <p>如果你更习惯 ChatGPT 的界面，那就用 Codex。有五个入口，本质是同一个东西：</p>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>入口</th><th>形态</th><th>适合</th></tr></thead>
-                  <tbody>
-                    <tr><td>Codex CLI</td><td>终端</td><td>主力，和 Claude Code 同一类</td></tr>
-                    <tr><td>ChatGPT 桌面版</td><td>左上角菜单里选 Codex</td><td>已经在用 ChatGPT，不想换工具</td></tr>
-                    <tr><td>Codex IDE 插件</td><td>编辑器里</td><td>习惯在 IDE 里写代码</td></tr>
-                    <tr><td>Codex 网页版</td><td>浏览器 chatgpt.com/codex</td><td>临时用</td></tr>
-                    <tr><td>Codex Cloud</td><td>OpenAI 的云端机器</td><td>关掉电脑也能继续跑，<strong>需要 Plus 及以上</strong></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <pre><code># macOS / Linux（官方推荐）
-curl -fsSL https://chatgpt.com/codex/install.sh | sh
+              <h3>十、Harness 的优缺点</h3>
+              <p>前面九节都在讲怎么用。但这一节更重要——<strong>任何工具都有代价，你得知道付的是什么</strong>。</p>
 
-# Windows（PowerShell）
-powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 | iex"
-
-# 登录（推荐用 ChatGPT 账号，不用单独买 API key）
-codex login
-
-# 然后照旧 cd 到项目里再运行
-cd ~/projects/my-app
-codex</code></pre>
-              <div class="note note-warn">
-                <b>一个真实的坑：别装错包</b>
-                <p>如果你用 npm，<strong>必须带 <code>@openai/</code> 前缀</strong>：<code>npm install -g @openai/codex</code>。写成 <code>npm install -g codex</code> 会装到一个 2011 年的同名静态站点生成器上，而它<strong>装完之后 <code>codex</code> 命令居然能正常执行</strong>——很多人就这么以为自己装成功了。</p>
-              </div>
-              <p>Codex 里新人最该记的几个斜杠命令：<code>/init</code>（生成 AGENTS.md）、<code>/plan</code>（先规划）、<code>/review</code>（审查改动）、<code>/permissions</code>（设权限）、<code>/status</code>（看状态）。终端里还有 <code>codex exec</code> 和 <code>codex review</code> 两个非交互命令，写脚本和 CI 时用。</p>
-
-              <h3>Chat、Work、Codex、Dots 到底什么关系</h3>
-              <p>OpenAI 现在把 AI 分成了几个入口，名字很容易混。判断方法很简单：<strong>看你最后要的是什么。</strong></p>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>入口</th><th>做什么</th><th>你要的成品是</th></tr></thead>
-                  <tbody>
-                    <tr><td>Chat</td><td>提问、搜索、头脑风暴</td><td>一个答案</td></tr>
-                    <tr><td>Work</td><td>研究、整理分析</td><td>文档、表格、演示、报告</td></tr>
-                    <tr><td>Codex</td><td>写调试代码、跑测试命令、看仓库</td><td>代码改动、diff、测试结果</td></tr>
-                    <tr><td>Dots</td><td>常驻智能体，在你不在时跨应用持续推进</td><td>一堆后台任务的结果</td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <p>需要说明的是：<strong>Work 和 Codex 的能力是重叠的。</strong>官方原话是「Codex remains dedicated to software development」，Work 也能写代码。区别在界面习惯、技术细节的呈现方式，以及你最后要审的是文档还是 diff。</p>
-              <div class="note">
-                <b>Dots 是什么，值不值得你关注</b>
-                <p>Dots 是 OpenAI 在 2026 年 9 月 29 日 DevDay 上发布的常驻智能体。它有自己的云端电脑和浏览器，能连 4000 多个应用，在你睡觉时继续干活，需要你时用文字或语音找它。</p>
-                <p><strong>但今天（2026 年 10 月）不建议你碰它</strong>，有三个硬性原因：① 它只在 <strong>Pro $100 以上、Business Premium 和 Enterprise</strong> 开放，Plus 和免费版都<strong>用不了</strong>；② 官方在三处都写着「rolling out gradually」，<strong>还在分批推送</strong>，你所在的地区大概率还没轮到；③ 它编码时调用的其实就是 Codex 的云端环境——它是<strong>调度层，不是编码器</strong>。</p>
-                <p>一句话：<strong>想「让 AI 帮我写代码」，用 Codex，Plus 就够。Dots 是给需要 AI 在自己不在场时持续干活的人准备的，不是新手的起点。</strong></p>
-              </div>
-
-              <h3>本章要点</h3>
+              <h4>它确实很强的地方</h4>
               <ul>
-                <li>只用网页版聊天，AI 碰不到你的项目。要动手就得用 Harness。</li>
-                <li>Claude Code 和 Codex 选一个就行，不用两个都学。它们共享 <code>AGENTS.md</code> 格式。</li>
-                <li>先 <code>/plan</code> 拿方案，确认后再执行。</li>
-                <li>权限确认别关。它是 AI 能跑在你电脑上的唯一安全带。</li>
-                <li>项目的长期规则写进 <code>AGENTS.md</code>，别每次重新讲一遍。</li>
+                <li>
+                  <strong>从「能聊天」到「能干活」的质变。</strong>这是最实在的一条。以前 AI 只能给一段代码让你复制粘贴，现在它能自己读文件、跑起来、看报错、再改——<strong>反馈闭环是质变，不是效率提升</strong>。
+                </li>
+                <li>
+                  <strong>上手门槛低到反常。</strong>会说话就能用。你不需要会写代码才能让 AI 写代码。
+                </li>
+                <li>
+                  <strong>长上下文让「整个项目」成为可能。</strong>把几十万 token 的代码库装进上下文，AI 理解项目的方式接近人。这是单个文件级的补全工具做不到的。
+                </li>
+                <li>
+                  <strong>可回滚性让大胆试变得安全。</strong>配合 Git 检查点，它一次改几十个文件也不怕——不行就退回去。
+                </li>
+                <li>
+                  <strong>生态在快速成熟。</strong>Skill、MCP、插件市场，几个月前还没有的东西现在已经能用了。
+                </li>
+              </ul>
+
+              <h4>必须知道的缺陷</h4>
+              <div class="note note-warn">
+                <b>一、安全问题有实证数据，不是空谈</b>
+                <p>新加坡国立大学对 200 个已上线的 AI 生成应用做了安全审计（arXiv:2606.23130），发现 <strong>91% 至少含一个漏洞，其中三分之二属于严重或高危级别</strong>，集中在访问控制失效、注入和认证缺失。另一项基于 186 个真实任务的基准测试（arXiv:2512.03262）发现：功能正确的方案占 57%，<strong>但安全的只有 11.8%</strong>。</p>
+                <p>而且研究者特别指出：<strong>在提示词里加「请注意安全」并不能改善这一点</strong>。安全不是提示词能解决的事。</p>
+              </div>
+              <ul>
+                <li>
+                  <strong>二、它会为了「让错误消失」而破坏安全。</strong>上面那篇审计论文把这归为「目标缺陷」：当代码跑不通时，Agent 倾向于移除校验、放宽权限、绕过检查，而不是回头查原因。<strong>这和人的直觉相反</strong>——人卡住了会去想「为什么」，AI 更可能想「怎么绕过」。
+                </li>
+                <li>
+                  <strong>三、代码可能超出你的理解范围。</strong>这是最隐蔽的风险。Karpathy 提出「vibe coding」时就明说了这一点：代码增长到了自己理解不了的程度。<strong>代码能跑 ≠ 你能维护它。</strong>一旦三个月后出 bug，你连从哪里开始查都不知道。
+                </li>
+                <li>
+                  <strong>四、成本不可预测。</strong>订阅看着是月付的，但实际用量有「每 5 小时窗口」的额度限制，任务一多就容易撞上限。更麻烦的是<strong>如果误配成 API key 计费，那是按 token 单独收费的，跟订阅完全分开</strong>——一个跑飞的循环可能一天烧掉不少钱。用 API key 模式时一定要设预算上限。
+                </li>
+                <li>
+                  <strong>五、依赖网络和云服务。</strong>断网、云端故障、限流都会让它停摆。纯订阅制产品还带来<strong>厂商锁定</strong>：你的工作流、提示词习惯、Skill 资产都长在一家服务商上。
+                </li>
+                <li>
+                  <strong>六、会放大你原有的模糊。</strong>你说不清楚的需求，AI 也不会问清楚，它会猜。「先别写，问我几个问题」这个习惯能挡掉大部分返工。
+                </li>
+                <li>
+                  <strong>七、越新越不稳。</strong>前面说的 DSH 直接在仓库顶上写着「会有破坏性变更」，Aider 更新放缓，Roo Code 已经死了。<strong>选型时优先考虑活跃维护的开源工具，和有多个入口的大厂产品</strong>，能少踩很多坑。
+                </li>
+              </ul>
+
+              <h4>怎么用才能扬长避短</h4>
+              <div class="note">
+                <b>四个原则</b>
+                <ul>
+                  <li><strong>从最不可信的任务开始。</strong>一次性脚本、个人小工具、探索性原型——这些地方它出错的代价最小，收益最大。</li>
+                  <li><strong>权限从紧开始。</strong>官方最佳实践的原话是「Start with tight approval/sandbox settings, loosen only for trusted repos」。先从只读的计划模式开始，熟了再放开。</li>
+                  <li><strong>不要只让它生成代码。</strong>要让它<strong>写测试、跑检查、确认行为、审查 diff</strong>。这是 OpenAI 官方指南里最该被记住的一句。</li>
+                  <li><strong>每个任务前后建 Git 检查点。</strong>这不是可选项，是让「大胆试」这个动作成立的前提。详见第六章。</li>
+                </ul>
+              </div>
+
+              <h3>十一、常见坑</h3>
+              <ul>
+                <li><strong>装了个已经死了的项目。</strong>先看 GitHub 最后一次提交时间。</li>
+                <li><strong>npm 装错包。</strong>见前面 Codex 那节的警告。</li>
+                <li><strong>在错误的目录启动。</strong>它只管当前目录。先 <code>cd</code> 再启动。</li>
+                <li><strong>一个会话干到底。</strong>聊了几十轮之后，早期的目标早就被挤出上下文了，它开始跑偏。<strong>一个会话干完一件事，然后开新的。</strong></li>
+                <li><strong>把长期规则每次都重打一遍。</strong>写进 <code>AGENTS.md</code>，一次搞定。</li>
+                <li><strong>用 DSH 这类预览版做正式项目。</strong>它没经过安全审计。</li>
               </ul>
             </div>
           </details>
@@ -555,25 +823,13 @@ claude mcp remove mydb</code></pre>
           </details>
 
           <details id="ch-06">
-            <summary><span>06 / GIT</span>第六章 · Git 与 GitHub：团队的公共记忆</summary>
+            <summary><span>06 / GIT·GITHUB</span>第六章 · Git 与 GitHub：团队的公共记忆</summary>
             <div class="ch-body">
-              <p><strong>目标</strong>：搞懂 Git 和 GitHub 是什么、为什么对团队协作的提升大到值得专门学一章，并掌握日常够用的那一小撮命令。</p>
+              <p><strong>目标</strong>：分两部分讲清楚——前半是 <strong>Git</strong>，解决「代码只存在我电脑上、并且能安全回退」；后半是 <strong>GitHub</strong>，解决「三个人怎么一起改同一个项目而不打架」。第二部分会讲得比较细，因为<strong>团队怎么具体协作是这一章最重要的地方</strong>。</p>
 
-              <h3>为什么这件事值得单独一章</h3>
-              <p>前面五章都在讲怎么让 AI 帮你写代码。但 AI 写出来的东西如果只存在某一个人的电脑里，那它<strong>约等于不存在</strong>。换台电脑就没了，别人改坏了你回不去，两个人同时改必然冲突。</p>
-              <p>Git 解决的正是这件事。技术部反复验证过的一点是：<strong>同一个仓库能把三个人的协作效率拉高一个量级</strong>，原因不是它多聪明，而是它把下面几件事变成了默认行为：</p>
-              <ul>
-                <li><strong>所有人的改动都有记录</strong>——谁在什么时候改了哪一行、为什么改，都能查到。</li>
-                <li><strong>改错了能退回去</strong>——这是新手最需要、也最容易获得的安全感。</li>
-                <li><strong>多人同时做不打架</strong>——靠分支把工作隔开，靠 Pull Request 合并。</li>
-                <li><strong>交接不再是问题</strong>——任何人拉下最新代码就能接着做，不依赖某个人的记忆。</li>
-              </ul>
-              <div class="note">
-                <b>和 AI 一起用，价值更大</b>
-                <p>官方最佳实践里明确建议：<strong>每个任务开始前和结束后各建一个 Git 检查点</strong>。因为 AI 一次能改几十个文件，一旦方向跑偏，没有回滚能力就只能手工一条条撤。有了检查点，一句 <code>git reset --hard</code> 就回到干净状态，可以放心让它大胆试。</p>
-              </div>
+              <h3>第一部分 · Git：你电脑上的版本控制</h3>
 
-              <h3>五个概念，够用了</h3>
+              <h4>五个概念，够用了</h4>
               <div class="terms">
                 <div><dt>仓库 repository</dt><dd>一个项目的全部文件 + 全部历史记录。可以理解成一个带完整存档的文件夹。</dd></div>
                 <div><dt>提交 commit</dt><dd>一次存档点。记录改了哪些文件、改成什么样、谁改的、为什么改。</dd></div>
@@ -582,7 +838,7 @@ claude mcp remove mydb</code></pre>
                 <div><dt>远程 remote</dt><dd>托管在 GitHub 上的那份仓库副本，一般叫 <code>origin</code>。你和队友之间的同步全靠它。</dd></div>
               </div>
 
-              <h3>日常够用的命令</h3>
+              <h4>日常够用的命令</h4>
               <p>不需要背全部。下面这十几条覆盖了 90% 的场景：</p>
               <div class="table-wrap">
                 <table>
@@ -596,73 +852,393 @@ claude mcp remove mydb</code></pre>
                     <tr><td><code>git diff</code></td><td>看具体改了什么</td></tr>
                     <tr><td><code>git switch -c &lt;名字&gt;</code></td><td>新建一条分支并切过去</td></tr>
                     <tr><td><code>git switch &lt;分支&gt;</code></td><td>切到已有分支</td></tr>
-                    <tr><td><code>git pull</code></td><td>拉取队友的最新改动并合并进来</td></tr>
+                    <tr><td><code>git fetch origin</code></td><td>只下载远端更新，<strong>不动你的文件</strong></td></tr>
+                    <tr><td><code>git pull</code></td><td>拉取并合并队友的最新改动</td></tr>
                     <tr><td><code>git push</code></td><td>把你的提交上传到远程</td></tr>
                     <tr><td><code>git restore &lt;文件&gt;</code></td><td>撤销某文件的改动（未提交时用）</td></tr>
-                    <tr><td><code>git restore --staged &lt;文件&gt;</code></td><td>从暂存区撤回，但保留改动</td></tr>
+                    <tr><td><code>git branch -d &lt;名字&gt;</code></td><td>删掉已经合并完的本地分支</td></tr>
                   </tbody>
                 </table>
               </div>
 
-              <h3>一次完整的工作</h3>
-              <ol class="steps">
-                <li>
-                  <p><strong>拿到最新代码。</strong>每次动手前先拉一次，别在旧版本上改。</p>
-                  <pre><code>git pull</code></pre>
-                </li>
-                <li>
-                  <p><strong>开一条自己的分支。</strong>不要直接在 <code>main</code> 上改。</p>
-                  <pre><code>git switch -c feature/search-box</code></pre>
-                </li>
-                <li>
-                  <p><strong>改代码。</strong>这里是让 AI 上场的时候。改完 <code>git status</code> 看一眼改了哪些文件。</p>
-                </li>
-                <li>
-                  <p><strong>提交。</strong>一次提交只做一件事，说明写清楚改了什么。</p>
-                  <pre><code>git add .
-git commit -m "feat: 首页加课程搜索框"</code></pre>
-                </li>
-                <li>
-                  <p><strong>推到 GitHub，开 Pull Request。</strong></p>
-                  <pre><code>git push -u origin feature/search-box</code></pre>
-                </li>
-              </ol>
-
-              <h3>Pull Request：团队协作的核心</h3>
-              <p>PR 的意思是「我改好了，请你们看一下再合并」。它是整个 GitHub 协作流程里最有价值的一环：</p>
+              <h4>fetch、merge、rebase、pull 到底什么区别</h4>
+              <p>这是新手最容易混淆的一组。用一句话记：<strong>fetch 是「只看不碰」，pull 是「看完并合并」。</strong></p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>命令</th><th>它做了什么</th><th>会改我的文件吗</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>git fetch origin</code></td><td>只把远端新提交下载到本地的 <code>origin/main</code></td><td><strong>绝不</strong></td></tr>
+                    <tr><td><code>git merge origin/main</code></td><td>把远端内容合并进来，产生一个合并提交</td><td>会</td></tr>
+                    <tr><td><code>git rebase origin/main</code></td><td>把你的提交<strong>摘下来重放</strong>到最新主线之上，提交 ID 会变</td><td>会</td></tr>
+                    <tr><td><code>git pull origin main</code></td><td>= fetch + merge，一步到位</td><td>会</td></tr>
+                    <tr><td><code>git pull --rebase origin main</code></td><td>= fetch + rebase</td><td>会</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>怎么选：</p>
               <ul>
-                <li><strong>有人帮你看。</strong>合并之前有人能发现 bug、指出写得不好的地方、统一风格。</li>
-                <li><strong>讨论留在原地。</strong>所有评论都记在 PR 里，以后能查到，不用翻聊天记录。</li>
-                <li><strong>可以跑自动检查。</strong>测试、代码检查、安全扫描能自动跑，不通过就不让合并。</li>
-                <li><strong>保护主线。</strong>设成「必须走 PR 且至少一人批准才能合并」，就没人能直接把坏代码推到 main 上。</li>
+                <li><strong>「我想知道队友更新了什么，但不想动我的代码」</strong>→ <code>git fetch origin</code>，然后 <code>git log HEAD..origin/main</code> 看差异</li>
+                <li><strong>「把我这条分支更新到最新主线」，只有我在用这条分支</strong>→ <code>git rebase origin/main</code>，历史干净</li>
+                <li><strong>「把我这条分支更新到最新主线」，别人也在用这条分支</strong>→ <code>git merge origin/main</code>，不要改写别人的提交</li>
+                <li><strong>「我只是想让本地 main 最新」</strong>→ <code>git switch main &amp;&amp; git pull</code></li>
               </ul>
-              <p>如果你是技术部新成员，<strong>记住一条就行：不要直接往 <code>main</code> 上提交，一定要走分支和 PR。</strong>这条规则存在的意义，就是让任何人都能放心往仓库里提交东西。</p>
+              <div class="note note-warn">
+                <b>rebase 的黄金法则</b>
+                <p><strong>永远不要 rebase 一条已经推送到远端、且别人可能已经基于它工作的分支。</strong>rebase 会改写提交 ID，别人拉下来时历史会错乱。只有「我自己开的 feature 分支」才可以用 rebase。</p>
+              </div>
 
-              <h3>.gitignore：不该进仓库的东西</h3>
+              <h4>.gitignore：不该进仓库的东西</h4>
               <p>项目根目录放一个 <code>.gitignore</code>，告诉 Git 哪些文件不要管：</p>
               <pre><code>node_modules/
 dist/
 .env
+*.log
 .DS_Store
 .vscode/</code></pre>
-              <p>最关键的是 <code>.env</code> 和各类密钥文件。带密码的代码一旦推到公开仓库，等于公开发布了。</p>
+              <p>最关键的是 <code>.env</code> 和各类密钥文件。<strong>带密码的代码一旦推到公开仓库，等于公开发布了</strong>，后面会讲怎么处理。</p>
 
-              <h3>新手最容易踩的三个坑</h3>
-              <div class="note note-warn">
-                <b>一、force push 会抹掉队友的提交</b>
-                <p><code>git push --force</code> 会用你本地的历史强行覆盖远程，可能把别人刚推的东西直接抹掉。万不得已要用，请用 <code>git push --force-with-lease</code>，它会先检查远程有没有别人的新提交。</p>
+              <h3>第二部分 · GitHub：团队的公共记忆</h3>
+              <p>Git 只解决了「代码存在我电脑上」。接下来的问题只有 GitHub 能答：<strong>凭什么全队能改同一份代码？凭什么改错了能退回去？凭什么三个月后有人接手还看得懂？</strong></p>
+
+              <h4>为什么在 AI 时代反而更需要它</h4>
+              <p>一个反直觉但很重要的事实：<strong>AI 让「写代码」变便宜了，于是「验证代码、归属责任、传递上下文、撤回错误」这四件事的相对成本上升了</strong>。GitHub 恰好就是这四件事的载体。</p>
+              <div class="cards">
+                <div><b>① 上下文</b><span>AI 最大的失败模式不是写不出代码，而是<strong>不知道你们团队的规矩</strong>。仓库里的 <code>AGENTS.md</code>、README、CODEOWNERS 就是给人和 AI 共用的项目记忆——把口口相传的知识变成能提交、能评审、能交接的资产。</span></div>
+                <div><b>② 可审计</b><span>GitHub 官方 2026 年 5 月的数据：<strong>新增代码约 41% 由 AI 辅助生成，超过五分之一的 code review 涉及 agent</strong>。当「生成一份看起来合格的 diff」成本趋近于零，而人的审查注意力固定不可扩容，review 就从「锦上添花」变成了整条链路上唯一的人类闸门。</span></div>
+                <div><b>③ 回滚</b><span>Git 是唯一让「大胆试错」变便宜的东西。AI 在自己的分支上改，改坏了直接关掉分支，<code>main</code> 一行未动。这让「大胆方案」在期望值上真正可行。</span></div>
+                <div><b>④ 交接</b><span>传统项目里作者和理解者之间有天然通信链路——作者还在，微信问一句就清楚了。<strong>AI 写代码打破了这个前提</strong>：作者是 Copilot，他不在群里。PR 描述、评论线程、<code>git blame</code> 就是替代品。</span></div>
               </div>
-              <div class="note note-warn">
-                <b>二、在 main 上写了半天才发现有分支更合适</b>
-                <p><code>git switch -c 正确分支名</code> 先建好分支（改动会跟着你过去），再考虑怎么处理已经提交的记录。新手阶段直接 <code>git switch -c</code> 就够了，历史不用动。</p>
+              <div class="note">
+                <b>一句话总结</b>
+                <p>AI 时代不是让 GitHub 变得不重要，而是让它<strong>从「记录历史」变成了「分配责任」</strong>。GitHub 官方自己的说法是：「开发者永远拥有 merge 按钮，改变的是点下它之前发生的一切。」</p>
               </div>
+              <p>另外有个值得知道的研究结论：Google DORA 2025 报告发现 AI 是<strong>放大器</strong>——它放大高效组织的优势，也放大低效组织的失能；吞吐量上升的同时，交付的<strong>不稳定性同样上升</strong>。该报告把「强版本控制实践」列为 AI 成功用法的七项基础能力之一。</p>
+
+              <details class="nested-details">
+                <summary><span>机制 1</span>Pull Request：整个协作的中枢</summary>
+                <p>PR 的意思是「我改好了，请你们看一下再合并」。它不是「代码分享功能」，而是<strong>整个团队流程的中枢</strong>——评审、讨论、CI 检查、合并，全挂在它上面。</p>
+                <p>一次 PR 的完整生命周期：</p>
+                <ol class="steps">
+                  <li><p>开 PR（还没写完可以先开 <strong>draft</strong>，draft 不能被合并，也不会自动请求 review）</p></li>
+                  <li><p>CI 自动触发，必须全绿</p></li>
+                  <li><p>请求评审（人可以手动选，CODEOWNERS 会自动指派）</p></li>
+                  <li><p>Reviewer 评论 / Request changes / Approve</p></li>
+                  <li><p>作者改完再提交 → 之前的 Approve 可能被自动撤销（这是故意的，防止「批准后偷偷加代码」）</p></li>
+                  <li><p>所有讨论线程 resolve → 满足全部规则 → 合并</p></li>
+                </ol>
+                <div class="note note-warn">
+                  <b>最容易被忽略的机制：Request changes 是硬阻塞</b>
+                  <p>GitHub 的 review 只有三种状态：<strong>Comment</strong>（纯反馈，不表态）、<strong>Approve</strong>（通过）、<strong>Request changes</strong>（要求修改）。<strong>只有第三种会真正阻止合并，而且它会一直生效</strong>——同事后来 push 了修复代码<strong>不会自动解除</strong>，你必须回去重新审一遍、或者他重新 Approve。</p>
+                </div>
+                <h4>关联 issue</h4>
+                <p>在 PR 描述里写 <code>Closes #12</code>，PR 合并进默认分支时对应的 issue 会自动关闭。<strong>但有个致命限制：PR 的目标分支必须是仓库的默认分支</strong>，否则关键词会被完全忽略。也可以在 PR 右侧的 Development 面板手动关联。</p>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>机制 2</span>分支保护：让规矩没法被绕过</summary>
+                <p>这是团队协作里<strong>投入产出比最高的一个设置</strong>——花 5 分钟配置，省掉后面无数麻烦。</p>
+                <p>它规定「什么情况下才允许合并进 <code>main</code>」，并且<strong>对所有人生效，包括管理员</strong>。仓库路径：<strong>Settings → Branches → Add rule</strong>。</p>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>要勾的规则</th><th>它拦住了什么</th></tr></thead>
+                    <tbody>
+                      <tr><td>Require a pull request before merging</td><td>禁止直接往 main 推代码</td></tr>
+                      <tr><td>Require approvals（设 1）</td><td>防止自己写自己批</td></tr>
+                      <tr><td>Dismiss stale approvals when new commits are pushed</td><td>防止「批准后偷偷加代码」</td></tr>
+                      <tr><td>Require conversation resolution</td><td>防止「嘴上说改了，实际没改」</td></tr>
+                      <tr><td>Require status checks to pass</td><td>测试没过不许合</td></tr>
+                      <tr><td>Require branches to be up to date</td><td>防止带着一堆冲突去合并</td></tr>
+                      <tr><td>Require linear history</td><td>禁掉 merge commit，历史保持线性</td></tr>
+                      <tr><td>Do not allow bypassing these settings</td><td>管理员也不能开后门</td></tr>
+                      <tr><td>Allow force pushes / Allow deletions</td><td><strong>保持关闭</strong>，这是防事故的最后一道闸</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p><strong>重要：配完之后，连仓库所有者自己也必须走 PR 才能改 main。</strong>这是故意的——如果连管理员都能绕过，那这个规则对其他人就只是建议。</p>
+                <div class="note">
+                  <b>「必需检查」最容易踩的坑</b>
+                  <p>如果 PR 一直卡住、提示「等待检查通过」但你看不到任何检查：多半是<strong>检查名称和 CI 里的 job 名对不上</strong>。要么名字不一致，要么你忘了在规则里勾选对应的那个检查。这条规则是隐形的，GitHub 不会明确告诉你哪里错了，只能一个个对照 job 名找。</p>
+                </div>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>机制 3</span>CODEOWNERS：指定谁必须看哪个文件</summary>
+                <p>一个纯文本文件，告诉 GitHub「哪些文件归谁管」。当 PR 改动这些文件时，GitHub <strong>自动</strong>向对应的人请求 review——不用谁记得去点。</p>
+                <p>放在 <code>.github/CODEOWNERS</code>，内容长这样：</p>
+                <pre><code># 注释用 #
+
+# 全局默认负责人
+*                    @你的组织/前端组
+
+# 按文件类型
+*.js                 @张三
+*.css                @李四
+
+# 按目录（前导 / 表示从仓库根开始）
+/docs/               @张三
+
+# 任意深度的同名目录
+**/logs              @李四</code></pre>
+                <div class="note note-warn">
+                  <b>三个必须知道的规则</b>
+                  <ul>
+                    <li><strong>最后一条匹配的模式生效</strong>（和 <code>.gitignore</code> 一样），所以 <code>*</code> 要放最前面。</li>
+                    <li><strong>同一模式的多个负责人必须写在同一行</strong>，写成两行的话第二行会覆盖第一行。</li>
+                    <li><strong>只对默认分支上的 CODEOWNERS 生效。</strong>你在新分支上加的文件，对当前这个 PR 无效，得先合并上去才对以后的 PR 生效。</li>
+                  </ul>
+                  <p>安全建议：<strong>把 CODEOWNERS 文件自己也保护起来</strong>——<code>/.github/CODEOWNERS   @负责人</code>，否则别人可以改掉分工表。</p>
+                </div>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>机制 4</span>GitHub Actions：让机器先过一遍</summary>
+                <p>GitHub 内置的自动检查服务。你在 <code>.github/workflows/</code> 放一个 YAML 文件，GitHub 就会在每次 push 或开 PR 时自动在一台干净的虚拟机上跑你指定的命令。</p>
+                <p>它把「测试跑没跑过」从<strong>作者的口头保证</strong>，变成<strong>页面上一个红绿勾</strong>——这是 review 之前最省事的自动化。</p>
+                <pre><code>name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 运行测试
+        run: npm test</code></pre>
+                <p>如果你的项目没有依赖任何东西（纯 HTML 页面），CI 不需要跑单元测试，光是「必需文件是否存在」「有没有误提交敏感文件」「HTML 结构对不对」这几项检查，就已经能拦住大部分低级错误，而且零依赖、不会因为环境问题假失败。</p>
+                <div class="note note-warn">
+                  <b>AI 时代最需要警惕的一件事：CI 作弊</b>
+                  <p>GitHub 官方在 2026 年 5 月专门写过一篇 agent PR 的文章，其中点名一种失效模式：<strong>AI 为了让 CI 变绿，会删掉失败的测试、跳过 lint、或者在命令后面加 <code>|| true</code></strong>。官方的原话是：任何削弱 CI 的改动都是「一票否决」。</p>
+                  <p>所以 review 时<strong>一定要先看有没有动 CI 配置和测试文件</strong>——这是 AI 写代码时代新增的一条红线，对人写的 PR 同样适用。</p>
+                </div>
+              </details>
+
+              <details class="nested-details">
+                <summary><span>机制 5</span>AI 在 GitHub 上扮演什么角色</summary>
+                <p>2026 年的 GitHub 上已经有一整套 AI 功能，它们在团队流程里承担的角色各不相同：</p>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>角色</th><th>它在哪一步</th><th>你要做什么</th></tr></thead>
+                    <tbody>
+                      <tr><td>补全 / 编辑</td><td>本地 IDE 里</td><td>照常写，改动还是你负责</td></tr>
+                      <tr><td>规划（Plan Mode）</td><td>写码之前</td><td>回答它的澄清问题，确认计划</td></tr>
+                      <tr><td>云端 Agent</td><td>接一个 issue，后台干活</td><td>审它开的 <strong>draft PR</strong>，决定合不合</td></tr>
+                      <tr><td>自动 code review</td><td>PR 打开时</td><td><strong>不能只信它</strong>，见下面的警告</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>GitHub 在设计上对 agent 做了不少限制，值得知道：<strong>它只能推送到自己创建的那一个分支（<code>copilot/</code> 前缀），不能自己把 PR 标记为可合并，不能自己 approve，也不能自己 merge；并且指派人不能 approve 这个 agent 开出来的 PR</strong>——防止自审自批。</p>
+                <div class="note note-warn">
+                  <b>GitHub 自己对自动 review 的免责声明，原文大意</b>
+                  <p>它可能<strong>漏掉</strong>代码里的问题（尤其改动大或复杂时），也<strong>可能报告根本不存在的问题</strong>；它给的建议未必正确，还可能含安全漏洞。官方原话是：「你始终应当审阅并验证 Copilot 生成的反馈，并用谨慎的人工审阅来补充它。」</p>
+                  <p>换句话说：<strong>自动 review 是帮你筛出可疑点，不是替你把关。</strong>把机器的判断当作「值得看一眼的地方」，而不是「已经检查过了」。</p>
+                </div>
+              </details>
+
+              <h4>团队具体怎么协作：从零到合并</h4>
+              <p>这一节是本章的核心。下面是一条<strong>从开始工作到合并完成</strong>的完整路径，照着做就行。</p>
+              <h4>第一步：每天开工，先同步</h4>
+              <p>这是防冲突的第一道闸。<strong>不要在过期的代码上写新功能</strong>——否则你的 PR 会塞满和本次需求无关的 diff，reviewer 看不懂，合并时也更容易撞车。</p>
+              <pre><code>git switch main
+git pull origin main
+git switch -c feat/12-login-page   # 基于最新的 main 开分支</code></pre>
+              <h4>第二步：写代码，分次提交</h4>
+              <pre><code>git status                  # 永远先看这个
+git diff                    # 看具体改了什么
+
+git add 具体文件路径          # 推荐：明确指定要提交什么
+git commit -m "feat(auth): 添加登录表单组件"</code></pre>
+              <p>commit message 建议用固定前缀，一眼能看出改动性质：</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>前缀</th><th>含义</th></tr></thead>
+                  <tbody>
+                    <tr><td><code>feat</code></td><td>新功能</td></tr>
+                    <tr><td><code>fix</code></td><td>修 bug</td></tr>
+                    <tr><td><code>docs</code></td><td>文档</td></tr>
+                    <tr><td><code>refactor</code></td><td>重构，不改功能</td></tr>
+                    <tr><td><code>chore</code></td><td>杂务（依赖更新、配置）</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h4>第三步：推到 GitHub，开 PR</h4>
+              <pre><code>git push -u origin feat/12-login-page</code></pre>
+              <p>然后在 GitHub 网页上开 Pull Request。描述里至少写清三件事：</p>
+              <div class="vs">
+                <div class="bad">
+                  <b>不合格的描述</b>
+                  <p>修了一些东西</p>
+                </div>
+                <div class="good">
+                  <b>合格的描述</b>
+                  <p><strong>做了什么</strong>：新增登录表单，接了 /api/login。<br /><strong>怎么验证</strong>：跑 npm run dev，打开 /login，用测试账号登录。<br /><strong>关联</strong>：Closes #12</p>
+                </div>
+              </div>
+              <p>还没写完就先开成 <strong>draft PR</strong>，等人看个方向；写完点 <strong>Ready for review</strong>，这时才会正式触发 review 流程。</p>
+              <h4>第四步：PR 打开后，main 又更新了怎么办</h4>
+              <p>这是新手最容易忽略的一步。如果不管，PR 会越拖越难合。</p>
+              <p><strong>最简单的方式</strong>：PR 页面上会有蓝色提示条，点 <strong>Update branch</strong> 就行。</p>
+              <p><strong>命令行（更可控）</strong>：</p>
+              <pre><code>git switch main
+git fetch origin
+git merge origin/main        # 让本地 main 追上远端
+
+git switch feat/12-login-page
+git rebase origin/main       # 把你的提交搬到最新 main 之上
+# 如果有冲突：解决后 git add . &amp;&amp; git rebase --continue
+
+git push --force-with-lease</code></pre>
               <div class="note note-warn">
-                <b>三、密钥推上去了</b>
-                <p>先立刻<strong>吊销或重置那个密钥</strong>——只删文件是不够的，历史里还在。公开仓库里的密钥应当直接视为已泄露。然后用 <code>git filter-repo</code> 重写历史并强制推送（私有仓库才可这么补救）。</p>
+                <b>只能用 <code>--force-with-lease</code>，永远不要用 <code>--force</code></b>
+                <p><code>--force</code> 无条件覆盖远端，会<strong>无声地抹掉同事刚推的提交</strong>。<code>--force-with-lease</code> 会先检查远端是不是还是你上次看到的那个版本，如果别人推过东西，它会<strong>直接拒绝并报错</strong>。这一个字母的差别，救过很多人的提交。</p>
+              </div>
+              <h4>第五步：处理 review 意见</h4>
+              <p>拿到意见之后，<strong>在同一个分支上继续改，不要为 review 意见新开 PR</strong>——这样 reviewer 能在同一个页面看到完整的对话历史。</p>
+              <p>回复评论时，<strong>说清楚「改了什么、为什么这么改、验证了没有」</strong>，而不是只回「好的，我改一下」——后者等于让人家自己再去看一遍 diff。</p>
+              <p>改完之后点评论线程下方的 <strong>Resolve conversation</strong>，把这条讨论标记为已解决。如果分支保护开了「所有对话必须解决」，没 resolve 会直接挡住合并。</p>
+              <h4>第六步：合并，然后立刻同步</h4>
+              <div class="note note-warn">
+                <b>合并后这一步最容易忘，后果也最严重</b>
+                <p>忘了同步，你下次开分支就是基于过期的 main，PR 里会带上一堆无关改动，还会莫名冲突。养成肌肉记忆：</p>
+              </div>
+              <pre><code>git switch main
+git pull origin main
+git branch -d feat/12-login-page   # 删掉本地分支
+git fetch origin --prune          # 清理失效的远端分支引用</code></pre>
+
+              <h4>Review 时具体看什么</h4>
+              <p>给一个可以直接照着走的顺序。前三步各一两分钟，但能挡掉八成的问题。</p>
+              <ol class="steps">
+                <li>
+                  <p><strong>先看 CI</strong>。任何一个红叉都先别细读，先问为什么。</p>
+                </li>
+                <li>
+                  <p><strong>看改动范围</strong>。<code>Files changed</code> 超过十几个文件，或者改动几百行 → 直接要求拆小。<strong>一个 PR 只做一件事</strong>，这是最有效的 review 建议。</p>
+                </li>
+                <li>
+                  <p><strong>看有没有动不该动的文件</strong>：CI 配置、测试文件、锁文件（<code>package-lock.json</code>）、被压缩过的文件。<strong>这一步现在格外重要</strong>——见上面「CI 作弊」。</p>
+                </li>
+                <li>
+                  <p><strong>安全检查</strong>（优先级最高）。搜一下 diff 里有没有 <code>password</code>、<code>token</code>、<code>secret</code>、<code>api_key</code>、<code>.env</code>。有没有把用户输入直接拼进 SQL、命令行或文件路径。</p>
+                </li>
+                <li>
+                  <p><strong>真的跑一遍</strong>。reviewer 有责任真的把它跑起来，而不是只看 diff。跑不起来就说跑不起来，这本身就是重要信息。</p>
+                </li>
+                <li>
+                  <p><strong>兼容性</strong>。改没改接口、数据库字段、函数签名、依赖大版本？<strong>这几项最容易出事，而且本地看不出来。</strong></p>
+                </li>
+              </ol>
+
+              <h4>两个人同时改会怎样</h4>
+              <p>先说结论让你放心：<strong>如果你们在不同分支上改，Git 通常能自动合并。只有改到同一个文件的同一块区域时才会冲突。</strong></p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>情况</th><th>结果</th></tr></thead>
+                  <tbody>
+                    <tr><td>改不同文件</td><td>毫无问题</td></tr>
+                    <tr><td>同一文件、不同区域</td><td><strong>自动合并成功</strong></td></tr>
+                    <tr><td>同一文件的同一行</td><td>冲突，需要你决定</td></tr>
+                    <tr><td>两个人都直接改 main</td><td>后 push 的人被拒绝——<strong>这是 Git 在保护你</strong></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>最后那种情况的正确处理：</p>
+              <pre><code>git pull --rebase origin main
+git push</code></pre>
+              <h4>冲突怎么解决</h4>
+              <p>rebase 时冲突，Git 会在文件里插入这样的标记：</p>
+              <pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+（你这边现在有的内容）
+=======
+（远端同步过来的内容）
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code></pre>
+              <p>处理步骤：</p>
+              <ol class="steps">
+                <li><p><code>git status</code> —— 看 <strong>Unmerged paths</strong> 那一段，那里列的就是冲突文件</p></li>
+                <li><p>打开冲突文件，<strong>把三个标记行全部删掉</strong>，只留下你要的内容（可能两边都要，手工组合）</p></li>
+                <li><p><code>git add .</code> 标记为已解决</p></li>
+                <li><p><code>git rebase --continue</code>（如果是 merge 冲突，这里是 <code>git commit</code>）</p></li>
+                <li><p><strong>重新跑一遍测试</strong>，再 push</p></li>
+              </ol>
+              <p>想放弃这次操作回到之前的状态：<code>git rebase --abort</code> 或 <code>git merge --abort</code>。</p>
+              <p><strong>最后一步千万别省。</strong>冲突标记漏删一个，代码会语法报错；更常见的是语法没错但逻辑错了——两边的 CSS 合并后样式打架，两边的判断条件合并后互相覆盖。</p>
+              <h4>怎么从源头减少冲突</h4>
+              <ul>
+                <li><strong>一个 PR 只做一件事。</strong>改 20 行的 PR 和改 500 行的 PR，冲突概率差 20 倍。</li>
+                <li><strong>重构单独开 PR</strong>，不要和功能改动混在一起。</li>
+                <li><strong>锁文件（<code>package-lock.json</code> 等）单独一个 PR</strong>，不要和代码混在一起——这是冲突重灾区。</li>
+                <li><strong>格式化交给工具统一处理</strong>（Prettier 等），自动格式化产生的改动集中在一个提交里，不会和别人的逻辑改动打架。</li>
+              </ul>
+
+              <h4>合并方式怎么选</h4>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>方式</th><th>结果</th><th>什么时候用</th></tr></thead>
+                  <tbody>
+                    <tr><td>Merge commit</td><td>保留全部提交，加一个合并点</td><td>需要保留完整历史时</td></tr>
+                    <tr><td><strong>Squash 合并</strong></td><td>压成一个提交，历史线性</td><td><strong>绝大多数团队，包括学生团队</strong></td></tr>
+                    <tr><td>Rebase 合并</td><td>逐个提交放到主线，线性</td><td>你们能保证每个提交都是有意义的原子提交</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>推荐 <strong>Squash 合并</strong>：历史干净、主干上的提交信息完全可控、PR 里的细碎提交（「改个错别字」「处理 review 意见」）不会污染主干。</p>
+              <div class="note note-warn">
+                <b>用 squash 有一个配套规则必须知道</b>
+                <p><strong>squash 合并之后，永远不要再用旧分支开新 PR。</strong>因为提交被压过了，共同祖先没变，后续 PR 会把已经合进去的改动<strong>再带一遍</strong>，于是你就得解决一遍一模一样、但看起来毫不相关的冲突。每次开新分支都从最新的 <code>main</code> 开始。</p>
               </div>
 
-              <h3>现在就能学会的</h3>
-              <p>不用一次全学。先把这四条练到不用想：<code>git status</code>、<code>git add</code>、<code>git commit</code>、<code>git push</code>。加上「不在 main 上直接改」这一条习惯，你就已经能安全地参与团队协作，剩下的用到再查。</p>
+              <h4>常见事故与处理</h4>
+              <div class="note note-warn">
+                <b>一、force push 覆盖了同事的提交</b>
+                <p><strong>第一步：立刻停手</strong>，不要再 push 任何东西到那个分支。然后让同事在他自己电脑上执行 <code>git reflog</code>——它会列出所有历史位置，包括被覆盖前的提交。找到那个 SHA 后恢复：</p>
+                <pre><code>git switch -c 分支名-recovered a1b2c3d
+git push -u origin 分支名-recovered</code></pre>
+                <p><strong>预防比恢复重要：</strong>只用 <code>--force-with-lease</code>；分支保护里保持「Allow force pushes」关闭；永远不要 force push 到 <code>main</code>。</p>
+              </div>
+              <div class="note note-warn">
+                <b>二、密钥泄露</b>
+                <p>这是所有事故里最紧急的一个。处理顺序很重要：<strong>先轮换，再撤销</strong>——</p>
+                <ol>
+                  <li>立刻去服务商后台<strong>创建新密钥</strong></li>
+                  <li>把所有用到旧密钥的地方（服务器、CI 密钥、本地配置）换成新的，并验证能跑通</li>
+                  <li><strong>然后才撤销旧密钥</strong></li>
+                  <li>用 <code>git filter-repo</code> 清掉历史里的密钥（<strong>改写历史是破坏性操作，必须先通知所有协作者</strong>）</li>
+                </ol>
+                <p><strong>只删文件是不够的</strong>——密钥会传播到 fork、备份和 CI 日志里，删掉文件不等于密钥消失，必须撤销。</p>
+                <p><strong>预防：</strong>所有密钥放 <code>.env</code>（进 <code>.gitignore</code>），仓库里只提交一个 <code>.env.example</code> 放变量名。GitHub 对公开仓库的 <strong>secret scanning 推送保护是免费且已正式可用</strong>的——它会在你 push 时直接拦下疑似密钥。</p>
+              </div>
+              <div class="note note-warn">
+                <b>三、误删分支</b>
+                <p>如果这个分支曾经开过 PR：仓库 → <strong>Pull requests → Closed</strong> → 找到对应的 PR → 页面底部点 <strong>Restore branch</strong>。或者用 <code>git branch 分支名 &lt;sha&gt;</code> 从某个提交重建。</p>
+                <p>没开过 PR 的分支恢复就没有保证了。<strong>预防：分支保护里把「Allow deletions」保持关闭。</strong></p>
+              </div>
+              <div class="note note-warn">
+                <b>四、想撤销一个已经合并的提交</b>
+                <p>用 <code>git revert &lt;提交&gt;</code>，<strong>不要用 <code>reset</code></strong>。revert 会生成一个「反向提交」，<strong>历史完整保留</strong>——这在协作场景是必需的，因为你需要能证明「曾经有过这个问题，后来被撤销了」。GitHub 网页上那个 PR 底部也有 <strong>Revert</strong> 按钮。</p>
+              </div>
+
+              <h4>如果只记住五句话</h4>
+              <ol class="steps">
+                <li><p><strong>合并后立刻同步：</strong><code>git switch main &amp;&amp; git pull &amp;&amp; git branch -d &lt;分支&gt;</code>。这一步忘了，后面全是无谓的冲突。</p></li>
+                <li><p><strong>只用自己的分支 rebase，只用 <code>--force-with-lease</code>。</strong></p></li>
+                <li><p><strong>一个 PR 只做一件事。</strong>这是降低冲突和 review 成本的最大杠杆。</p></li>
+                <li><p><strong>项目第一天就配好分支保护和 CI。</strong>它不是「以后有空再说」的事，是让错误难以发生的前提。</p></li>
+                <li><p><strong>main 永远只走 PR。</strong>包括你自己。</p></li>
+              </ol>
             </div>
           </details>
 
