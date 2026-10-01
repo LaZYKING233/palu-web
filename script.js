@@ -30,15 +30,30 @@ const revealItems = document.querySelectorAll('.reveal');
 if (reduceMotion || !('IntersectionObserver' in window)) {
   revealItems.forEach((item) => item.classList.add('is-visible'));
 } else {
+  // threshold 必须是 0：.reveal 里可能有整章正文那么高的元素（比如手册的章节列表），
+  // 按比例触发的话它需要露出自身高度的一定比例才生效，直接跳锚点时永远达不到，
+  // 结果是整块内容一直停在 opacity: 0。任意一点进入视口就显示。
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
       entry.target.classList.add('is-visible');
       observer.unobserve(entry.target);
     });
-  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
   revealItems.forEach((item) => observer.observe(item));
 }
+
+// 兜底：直接带 #锚点进来、或点击锚点跳转后，浏览器是瞬时定位的，
+// 观察器可能来不及触发。这里主动把已经进入（或已滚过）视口的元素点亮。
+const revealPassed = () => {
+  revealItems.forEach((item) => {
+    if (item.classList.contains('is-visible')) return;
+    if (item.getBoundingClientRect().top < window.innerHeight) item.classList.add('is-visible');
+  });
+};
+window.addEventListener('pageshow', revealPassed);
+window.addEventListener('hashchange', () => setTimeout(revealPassed, 60));
+revealPassed();
 
 // 手册：跳到某个章节时顺手把它展开，否则会停在一行标题上
 const openChapter = (id) => {
