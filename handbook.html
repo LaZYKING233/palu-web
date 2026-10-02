@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="从零开始的 AI 编程学习文档：Harness、Skill、MCP、提示词、Git 与 GitHub，教你成为一个好的 vibe coder。" />
+    <meta name="description" content="从零开始的 AI 学习文档：Harness、Skill、MCP、提示词、Git 与 GitHub，以及 Jev 决策模型和 ComfyUI AI 短剧入门。" />
     <meta name="theme-color" content="#d9ff6c" />
     <title>Vibe Coding 学习指南｜校园帕鲁工作室 · 凌音小窝</title>
     <link rel="icon" href="./assets/palu-app-icon.png" type="image/png" />
@@ -38,10 +38,10 @@
           <div class="dept-coordinate"><span>学习文档 / HANDBOOK</span><span>零基础友好</span></div>
           <p class="dept-kicker">从不会开始，把想法做出来</p>
           <h1>Vibe Coding<br />学习指南</h1>
-          <p class="dept-lead">这是一份写给所有人的 AI 编程入门文档。你不需要会写代码，但需要愿意动手。读完这六章，你会知道怎么让 AI 帮你把一个想法，变成真正能跑起来、也能交给别人接手的东西。</p>
+          <p class="dept-lead">这是一份写给所有人的 AI 学习文档。基础六章讲如何把想法变成能运行、能交接的代码；后面两章拓展到 Jev 决策模型和 ComfyUI 的 AI 短剧制作。你不必一下全懂，先从想做的事情开始。</p>
           <div class="dept-hero-actions">
             <a class="button dept-button" href="#ch-01">从第一章开始</a>
-            <span>共 6 章 · 预计阅读 90 分钟</span>
+            <span>共 8 章 · 基础 6 章 + 拓展 2 章 · 按需阅读</span>
           </div>
           <p class="dept-boundary"><strong>适合谁</strong><span>任何想用 AI 写东西的人，不限技术部、不限是否学过编程。内容公开，按需查阅，不必从头读到尾。</span></p>
         </div>
@@ -55,7 +55,7 @@
         <div class="dept-section-head reveal"><span>怎么读</span><span>READ THIS WAY</span></div>
         <div class="resource-heading reveal">
           <h2 id="path-title">三步，<br />从看懂到用起来。</h2>
-          <p>不要一次读完。先把工具跑起来，再慢慢补概念。下面是建议的顺序，但每一章都可以单独打开。</p>
+          <p>基础六章按下面三步学习，不用一次读完。第七、八章是决策与媒体制作的拓展，有兴趣再读；每一章都可以单独打开。</p>
         </div>
         <div class="path-grid reveal">
           <div class="path-part">
@@ -83,6 +83,8 @@
             <p>代码写完只是一半，能存下来、能协作才算完成。</p>
             <ul class="path-list">
               <li><a href="#ch-06"><b>06</b><span>Git 与 GitHub：团队的公共记忆</span></a></li>
+              <li><a href="#ch-07"><b>07</b><span>拓展 · Jev：让 AI 做选择</span></a></li>
+              <li><a href="#ch-08"><b>08</b><span>拓展 · ComfyUI 与 AI 短剧</span></a></li>
               <li><a href="#craft"><b>↗</b><span>怎么成为一个好的 vibe coder</span></a></li>
             </ul>
           </div>
@@ -93,8 +95,8 @@
         <div class="dept-section-head reveal"><span>正文</span><span>CLICK TO OPEN</span></div>
         <div class="resource-heading reveal">
           <h2 id="chapters-title">点开读，<br />看自己想看的部分。</h2>
-          <p>六章各自独立，都用同一套结构：先说目标，再展开。读完一章能立刻用上，就不用急着看下一章。</p>
-          <p>内容核对：2026-10-02（第一章、第三至第六章及结尾）。第二章保留作者原有购买经历，不在本次更新范围内；具体产品能力、额度和安装方式请同时查看官方说明。</p>
+          <p>八章各自独立，都用同一套结构：先说目标，再展开。先理解用途，再选一个小任务动手，不用急着看下一章。</p>
+          <p>内容核对：2026-10-02（第一章、第三至第八章及结尾）。第二章保留作者原有购买经历，未纳入核对；具体产品能力、额度和安装方式请同时查看官方说明。</p>
         </div>
 
         <div class="chapters-grid">
@@ -107,6 +109,8 @@
             <a href="#ch-04"><b>04</b>Skill 与 MCP</a>
             <a href="#ch-05"><b>05</b>提示词</a>
             <a href="#ch-06"><b>06</b>Git 与 GitHub</a>
+            <a href="#ch-07"><b>07</b>Jev 决策模型</a>
+            <a href="#ch-08"><b>08</b>ComfyUI 与 AI 短剧</a>
             <a href="#craft"><b>↗</b>好的 vibe coder</a>
           </nav>
         </aside>
@@ -1236,6 +1240,236 @@ git push -u origin 分支名-recovered</code></pre>
             </div>
           </details>
 
+          <details id="ch-07">
+            <summary><span>07 / DECISION</span>第七章 · Jev：让 AI 做有边界的判断</summary>
+            <div class="ch-body">
+              <p><strong>目标</strong>：认识分类、评分和概率判断这类任务，理解 Jev 与聊天模型的分工。先用虚构案例做练习，不把一个模型的输出直接接到真实业务操作上。</p>
+
+              <h3>一、它不是另一个聊天框</h3>
+              <p>「帮我写一份公告」需要组织语言；「这条反馈属于使用问题、疑似 Bug，还是功能建议」需要在明确的选项中判断。<strong>Jev 主要面向后一类任务。</strong></p>
+              <p>Jev 是 TypeSafe AI 提供的模型，官方将它归为 System One 模型：给出背景信息和规定好的问题，返回相应的结构化判断，而不是自由撰写文章。「决策模型」在这里描述产品用途，不是所有 AI 通用的分类标准。见<a href="https://docs.typesafe.ai/introduction" target="_blank" rel="noopener noreferrer">官方介绍</a>。</p>
+              <div class="note">
+                <b>先了解，不必为了这一章另买一个工具</b>
+                <p>本章按官方 Playground 和托管 API 的入口介绍，不提供本地权重部署教程。SDK 或第三方类似项目开源，不代表 Jev 的模型权重也开源。官方体验与接入方式见<a href="https://docs.typesafe.ai/introduction/quickstart" target="_blank" rel="noopener noreferrer">快速开始</a>；产品信息核实于 2026 年 10 月 2 日。</p>
+              </div>
+
+              <h3>二、三种问题：选哪类、处在哪档、是否成立</h3>
+              <p>先把问题定义好，再让模型判断。下面是官方的三种问题类型；校园场景只是帮助理解的例子，并不表示我们已经在小程序中接入了 Jev。</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型</th><th>适合问什么</th><th>怎样读结果</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Choice · 分类</strong></td><td>反馈更接近「使用咨询」「疑似异常」「功能建议」还是「信息不足」？这些类别没有高低顺序。</td><td>返回所选类别、各类别的概率及 confidence。类别说明要清楚，尽量避免互相重叠。</td></tr>
+                    <tr><td><strong>Score · 有序评分</strong></td><td>材料完整程度更接近「缺关键信息」「基本可判断」「信息较完整」哪一档？档位有顺序。</td><td>返回量表上的分数、概率分布及 confidence；分数可能位于两档之间，不一定是整数。</td></tr>
+                    <tr><td><strong>Noul · 是非概率</strong></td><td>这段反馈是否明确提到了「登录已过期」？一次只问一件事。</td><td>返回命题为真的概率，范围为 0 到 1；没有独立的 confidence 字段。接近 0 是倾向「否」，不是低置信度的意思。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>同一次请求里的问题分别作答，不能假定第二题会读取第一题的答案。如果下一步依赖前一步，应由程序显式串起来。类型与结果结构见<a href="https://docs.typesafe.ai/primitives" target="_blank" rel="noopener noreferrer">官方问题类型说明</a>。</p>
+              <p>注意问题的边界：「用户有没有提到登录过期」可以看文字；「这个账号的登录状态是否真的过期」必须核对系统实际状态。模型不能凭一段描述替代后台检查。</p>
+
+              <h3>三、不要把所有工作都交给它</h3>
+              <div class="cards">
+                <div><b>确定的规则 → 普通程序</b><span>必填项有没有填写、成员有没有发布权限、版本号是否合法，这些应按明确规则检查，不需要靠模型猜。</span></div>
+                <div><b>有限的判断 → 比较合适的方案</b><span>对描述做初步分类、按量表评价，可以比较规则、普通分类器、聊天模型和 Jev。任务简单时，规则就可能够用。</span></div>
+                <div><b>解释与写作 → 生成式工具</b><span>把确认过的更新日志写成公告、整理文案，需要生成语言。Jev 的分类结果不等于一篇可以发布的公告。</span></div>
+                <div><b>执行与责任 → 权限和人</b><span>模型判断不等于授权。发布公告、改账号、合并代码、决定版本，仍由对应流程和负责人控制。</span></div>
+              </div>
+              <p>聊天模型也可以按 JSON 格式输出分类结果。区别不能简化成「聊天模型不会分类」或「只要结构化就正确」：<strong>格式合规与判断正确是两件事</strong>，两条路线都需要用真实任务的样本验证。</p>
+              <p>TypeSafe 将训练路线称为 RLCD，即「面向校准决策的强化学习」，强调概率判断的校准。这是官方对自身方法的定位，不是我们已经独立复现的效果。宣传中的速度、成本和准确性，不能直接当作校园业务的实测结果。见<a href="https://typesafe.ai/" target="_blank" rel="noopener noreferrer">项目官网</a>。</p>
+
+              <h3>四、看一个校园反馈的练习</h3>
+              <p>假设有一条<strong>虚构反馈</strong>：「教材查询提示登录过期，不知道下一步怎么操作。」我们只想做初步分类，不要求它判断后台原因，也不让它替用户操作账号。</p>
+              <p>下面展示官方请求格式中的一种写法，仅供理解。它不是可以直接粘到静态网页里的完整调用代码，也没有使用真实用户资料。</p>
+              <pre><code>{
+  "model": "jev-latest",
+  "state": "用户反馈：教材查询提示登录过期，不知道下一步怎么操作。",
+  "questions": {
+    "feedback_kind": {
+      "type": "choice",
+      "instructions": "按当前描述做初步分类，不推测未提供的后台原因。",
+      "criteria": {
+        "usage_question": "询问已有功能的使用方法",
+        "possible_bug": "描述预期与实际行为不一致，疑似功能异常",
+        "feature_request": "提出新的功能或体验建议",
+        "insufficient_info": "现有信息无法支持前三项判断"
+      }
+    }
+  }
+}</code></pre>
+              <p>这里的 <code>state</code> 是待判断的材料，<code>instructions</code> 是判断要求，<code>criteria</code> 是每个选项的含义。不要只写几个缩写，就期待模型懂得我们的部门约定。</p>
+              <p><code>jev-latest</code> 是会随发布变化的别名。测试或交接时，要记录响应中的实际模型版本；需要固定版本时，按官方当前可用的标识配置。见<a href="https://docs.typesafe.ai/models" target="_blank" rel="noopener noreferrer">模型说明</a>。</p>
+              <pre><code>获准使用并去标识化的反馈 + 明确分类标准
+                  ↓
+           模型给出参考分类
+                  ↓
+     程序检查结果格式，模糊情况交给人
+                  ↓
+     客服核对信息 → 运营整理 → 技术评估与实现</code></pre>
+              <p>这只是练习方案，不是现有小程序的运行机制。我们的部门边界不变：客服收集和核对反馈，运营归纳合理的需求与 Bug，再提交技术部。模型不能绕过运营直接安排开发，也不能自动承诺修复时间。</p>
+
+              <h3>五、概率不是保证，confidence 也不是正确率</h3>
+              <p>Choice 和 Score 的 <code>confidence</code> 是根据结果的概率分布计算出来的量，算法随问题类型不同；不能一概把它当成「最高类别概率」，更不能读成「这一次必然有这么高的正确率」。Noul 则直接给出是非概率。见<a href="https://docs.typesafe.ai/confidence" target="_blank" rel="noopener noreferrer">官方置信度说明</a>。</p>
+              <p>「校准」可以粗略理解为：在足够多的类似预测里，模型给出的概率与实际结果频率是否相称。它是需要用一批案例检验的性质，不是对单个判断的担保。</p>
+              <div class="note note-warn">
+                <b>没有通用的「超过 0.9 就自动执行」</b>
+                <p>分类错一条咨询与错误操作账号，代价完全不同。阈值应根据任务、样本和出错成本来定；信息不足时允许不作结论。即使模型很肯定，也不能越过权限、人工审核或产品事实。</p>
+              </div>
+              <p>官方当前模型说明强调文本输入及英语表现；不要默认它已经适配我们的中文表达、校园简称和隐含语境。中文样本要单独测，图片、语音、视频也不能直接按文本接口提交。见<a href="https://docs.typesafe.ai/models" target="_blank" rel="noopener noreferrer">输入与语言支持说明</a>。</p>
+
+              <h3>六、新成员怎么开始</h3>
+              <ol class="steps">
+                <li><p><strong>只选一个小问题。</strong>例如「反馈初步分类」，先写出每类的定义，以及模糊案例应怎样处理，不要一开始就做自动客服。</p></li>
+                <li><p><strong>准备可用的样本。</strong>先用虚构例子；真实材料必须获准并去标识化。由人按统一标准标注，保留容易混淆和信息缺失的案例。</p></li>
+                <li><p><strong>比较而不是追热点。</strong>用相同案例比较规则、已有工具和 Jev，记录错分、漏掉重要异常、需要人工复核的数量，以及实测耗时与成本。</p></li>
+                <li><p><strong>先旁路观察。</strong>只产生建议，不影响用户；核对结果后再讨论是否接入。交接时留下样本范围、分类标准、实际版本、已知错误和负责人。</p></li>
+              </ol>
+              <div class="note note-warn">
+                <b>API 密钥与用户信息都不是练习素材</b>
+                <p>密钥不能写在公开仓库或静态网页里，应由受控服务端保存。校园账号密码、验证码、访问令牌，以及未经允许的用户记录，不能发给外部模型。先确认团队批准的数据范围与调用预算。</p>
+              </div>
+              <p>这一章最重要的不是学会某个接口，而是<strong>把问题问清楚，把结果接在有边界的流程里</strong>。模型可以帮助判断，人仍要负责标准、验证和后果。</p>
+            </div>
+          </details>
+
+          <details id="ch-08">
+            <summary><span>08 / COMFYUI·FILM</span>第八章 · ComfyUI：从一张图到一段 AI 短剧</summary>
+            <div class="ch-body">
+              <p><strong>目标</strong>：认识节点工作流，知道 AI 短剧从剧本到交付有哪些环节。先做一个短镜头，再尝试组织完整故事；本章不是安装全套模型或训练角色的要求。</p>
+
+              <h3>一、ComfyUI 是工作台，不是模型本身</h3>
+              <p>ComfyUI 是开源的节点式生成工具，可以组织图像、视频、音频等工作流。你在画布上连接步骤，让数据从输入流向输出；<strong>具体能生成什么，还取决于接入的模型与节点。</strong></p>
+              <p>本地运行的开源核心可以免费使用，但电脑算力、电力和存储仍有成本；Comfy Cloud、部分调用外部服务的 Partner Nodes 可能收费。不要把「软件开源」理解为「所有工作流都免费」。见<a href="https://support.comfy.org/articles/9806306061-about-comfy" target="_blank" rel="noopener noreferrer">官方产品说明</a>。</p>
+              <div class="terms">
+                <div><dt>节点 Node</dt><dd>一个处理步骤，如加载模型、读取图片、设置文字条件、执行采样、保存结果。一个节点不是一位会自己规划的 agent。</dd></div>
+                <div><dt>连线 Link</dt><dd>把上一步的输出交给下一步。接口有数据类型，不是看起来能接就能接。</dd></div>
+                <div><dt>工作流 Workflow</dt><dd>节点、连线与参数组成的流程，通常可保存为 JSON。它描述怎样运行，不会把所有模型文件一起装进去。</dd></div>
+                <div><dt>模型 Model</dt><dd>实际参与生成的权重文件。同一套软件可以换模型；不同模型需要相应加载器、条件和资源。</dd></div>
+              </div>
+              <p>浏览器只是操作界面，计算可能在本机，也可能在远程服务器。先弄清连接的是哪台机器、素材会发往哪里、费用由谁承担。工作流概念见<a href="https://docs.comfy.org/basic-concepts/workflow" target="_blank" rel="noopener noreferrer">官方说明</a>。</p>
+
+              <h3>二、先跑通一张图，再谈视频</h3>
+              <ol class="steps">
+                <li><p><strong>确认已有环境。</strong>先找负责人确认可用的电脑、运行方式和模型，不要为了入门一次下载所有热门模型。可从<a href="https://docs.comfy.org/get_started/first_generation" target="_blank" rel="noopener noreferrer">官方首次生成教程</a>认识基本步骤。</p></li>
+                <li><p><strong>从官方模板开始。</strong>在 Templates 入口或 Workflow 菜单的模板浏览器里选一个基础图像工作流。先看每个节点的作用，不急着加复杂扩展。</p></li>
+                <li><p><strong>核对依赖。</strong>模板可能提示缺模型。确认来源、许可、适用加载器及目录，再由获准的成员补齐；导入 JSON 不等于安装完环境。</p></li>
+                <li><p><strong>一次改一个条件。</strong>先保存一次成功输出，再修改提示词或一个参数，比较实际图片。失败时记录报错，不靠随机改十个参数碰运气。</p></li>
+                <li><p><strong>保存可交接的记录。</strong>保留工作流、输入素材、参数与使用版本。只发一张生成图片，别人通常无法知道它是怎么做出来的。</p></li>
+              </ol>
+              <p>模板入口和模型提示可能随版本变化，按<a href="https://docs.comfy.org/interface/features/template" target="_blank" rel="noopener noreferrer">官方模板说明</a>核对。以下是基础图像工作流的概念图，不是所有模型通用的完整接线图：</p>
+              <pre><code>加载模型 + 文字条件 + 初始潜在表示
+                    ↓
+                  采样
+                    ↓
+          解码为可见图像（常见步骤：VAE）
+                    ↓
+                预览与保存</code></pre>
+              <p>「潜在表示」暂时理解为模型内部处理图像的一种表示就够了。新手先认识输入、主要处理步骤和输出位置，没必要第一天就弄懂数学细节。</p>
+
+              <h3>三、AI 短剧不是按一下按钮就交片</h3>
+              <p>下面是一条建议的制作路线，不是 ComfyUI 自带的一键完整短剧功能。ComfyUI 可以承担其中的生成环节；写作、声音制作、剪辑和审核往往还要配合其他工具。</p>
+              <pre><code>剧本 → 分镜 → 角色与风格参考 → 关键画面
+                                      ↓
+                                  逐镜头视频
+                                      ↓
+                  配音 / 音效 / 必要的口型处理
+                                      ↓
+                       剪辑、字幕、检查与交付</code></pre>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>环节</th><th>要留下什么</th><th>先检查什么</th></tr></thead>
+                  <tbody>
+                    <tr><td>剧本</td><td>人物目标、冲突、转折、对白或旁白。</td><td>观众能否理解事情为什么发生？有没有只靠画面无法表达的信息？</td></tr>
+                    <tr><td>分镜</td><td>镜头编号、景别、动作、目标时长、声音说明。</td><td>一个镜头不要塞太多动作；镜头之间能否接起来？</td></tr>
+                    <tr><td>美术与关键画面</td><td>角色参考、服装与道具约定、场景风格、各镜头画面。</td><td>角色是否一致？构图是否给动作和字幕留出空间？素材是否获准使用？</td></tr>
+                    <tr><td>视频生成</td><td>分镜对应的短片段，保留通过检查的版本。</td><td>人物、手、物体关系、运动与闪烁。不能只看第一帧漂亮。</td></tr>
+                    <tr><td>声音与剪辑</td><td>配音、音效、剪辑工程、字幕和成片。</td><td>台词、节奏、音量、字幕错字、画幅与导出质量。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>第一支片子建议少人物、少场景、少复杂动作。旁白配简单画面通常更容易控制；这只是练习建议，不保证任何模型都能一次生成成功。</p>
+
+              <h3>四、视频模型怎样接进来</h3>
+              <div class="cards">
+                <div><b>文生视频 · T2V</b><span>主要用文字描述生成视频，适合探索画面和动作。角色长相与构图的控制需要另外评估。</span></div>
+                <div><b>图生视频 · I2V</b><span>从参考图出发生成运动。先做好关键画面，可以减少起始画面的不确定性，但后续仍可能变形或走样。</span></div>
+                <div><b>首尾帧与其他条件</b><span>部分模型接受起止画面、姿态或其他条件。支持哪些输入取决于具体模型与工作流，不是所有视频模型都有。</span></div>
+                <div><b>音视频联合生成</b><span>部分模型可以一起生成画面与声音。不能据此保证指定的中文台词、声音身份或口型准确，仍要听看检查。</span></div>
+              </div>
+              <p>可以看官方的<a href="https://docs.comfy.org/tutorials/video/wan/wan2_2" target="_blank" rel="noopener noreferrer">Wan 2.2 视频教程</a>和<a href="https://docs.comfy.org/tutorials/video/ltx/ltx-2" target="_blank" rel="noopener noreferrer">LTX-2 音视频教程</a>认识不同路线。它们是示例，不是本章对「最新最强」的排名；模型许可和运行要求分别核对。</p>
+              <p>能否在自己的电脑上跑，要看模型变体、分辨率、帧数、显存、卸载策略和节点实现。不要把某个低负载示例的要求套到全部工作流，也不要仅凭「别人能跑」就购买显卡。</p>
+              <p>练习时先选环境确实支持的小任务，少量尝试并记录耗时与失败。降低尺寸或帧数也要符合模型要求；云端运行则先设预算，不要连续重试到忘了费用。</p>
+
+              <h3>五、角色一致性：先约定，再生成，再检查</h3>
+              <p>为角色准备一张经过确认的参考图，再写清发型、服装、配色、道具和整体画风。不同镜头沿用同一套约定，发现漂移及时修正，不要等剪辑时才发现主角每次都换了脸。</p>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>常见办法</th><th>可以帮助什么</th><th>不能保证什么</th></tr></thead>
+                  <tbody>
+                    <tr><td>参考图 / 图像编辑</td><td>在支持的模型与节点中约束外观或起始画面。</td><td>运动过程中始终保留同一张脸、同一件衣服。</td></tr>
+                    <tr><td>LoRA</td><td>兼容时，帮助表达特定角色或风格。</td><td>随便一份 LoRA 都能跨模型使用；也不代表素材与训练数据许可合格。</td></tr>
+                    <tr><td>ControlNet 等结构条件</td><td>在支持的方案中提供姿态、边缘、深度等引导。</td><td>结构引导本身不等于人物身份锁定。</td></tr>
+                    <tr><td>局部重绘</td><td>修改指定区域，修补画面问题。</td><td>区域外完全不变，或修好的静帧能自动保证整段视频一致。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>这些能力需要模型、节点及输入相互兼容，基础概念见<a href="https://docs.comfy.org/basic-concepts/models" target="_blank" rel="noopener noreferrer">官方模型说明</a>。入门不要求训练 LoRA；先用获准的参考素材完成一个镜头就有意义。</p>
+              <div class="note note-warn">
+                <b>固定 seed 不是「锁脸按钮」</b>
+                <p>seed 是随机过程的种子。提示词、模型、工作流或环境改变后，相同 seed 不能保证同一角色或完全一致的输出。判断一致性要看实际画面，不能只看参数相同。</p>
+              </div>
+              <p>对白需要准确时，可以先单独确认台词和配音，再按支持的方案做口型或采用旁白。不要默认每个视频工作流都会生成音轨，也不要把自动生成的含糊声音当作已经完成配音。</p>
+
+              <h3>六、一个新人能开始的短片练习</h3>
+              <p><strong>练习题：一位虚构同学带错了书。</strong>以一个角色、一个场景、三到五个镜头，尝试做一支约 20—30 秒的小片。时长只是成片目标，由多个片段剪辑实现，不是承诺模型一次能输出这么长。</p>
+              <ol class="steps">
+                <li><p><strong>写清故事。</strong>先用几句话说明发现带错书、想办法应对、最后怎样收尾。写好旁白，避免依赖复杂多人对话。</p></li>
+                <li><p><strong>先做分镜与参考。</strong>确定画幅、角色和场景，给每个镜头写一个主要动作。先确认静态关键画面，再生成视频。</p></li>
+                <li><p><strong>只完成第一个镜头。</strong>检查整段运动、手与书的关系、人物外观。合格后再复制制作方法到其他镜头，失败就缩小动作范围。</p></li>
+                <li><p><strong>剪成故事。</strong>加入确认过的配音与字幕，调整停顿和切换。生成片段只是素材，不必原封不动地全用上。</p></li>
+                <li><p><strong>交给另一位成员复核。</strong>检查是否看得懂、是否有明显变形、台词与字幕是否一致，并留下可继续修改的文件。</p></li>
+              </ol>
+              <pre><code>镜头：S01
+用途：让观众发现「带错书」
+画面：固定中景；角色低头看手里的书
+约束：沿用角色参考；服装、书本外观保持一致
+声音：旁白「上课前五分钟，我才发现……」
+时长：先定剪辑目标，再按模型支持的长度生成
+检查：脸和手不明显变形；书本关系合理；无明显闪烁</code></pre>
+              <p>这里的分镜描述是计划，不是某个模型的专用提示词。实际工作流支持什么输入，要看模板和文档；可以用 AI 帮忙改写，但不能用它的保证代替看片。</p>
+
+              <h3>七、把流程交给下一位成员</h3>
+              <ul>
+                <li><strong>创作材料：</strong>剧本、分镜、角色与场景参考、提示词、素材来源与使用许可。</li>
+                <li><strong>运行材料：</strong>工作流 JSON、输入文件、模型与自定义节点的版本、关键参数、seed，以及运行环境说明。</li>
+                <li><strong>交付材料：</strong>分镜对应的视频与音频、剪辑工程、字幕、成片，以及检查意见和待修改项。</li>
+                <li><strong>过程记录：</strong>成功与失败的条件、实测时间、云端费用、人工修改过哪些地方、下一位成员应该先检查什么。</li>
+              </ul>
+              <p>部分输出格式或节点会把工作流写入文件元数据，但转码、压缩或平台传输可能移除它。<strong>单独保存 JSON，不要只依赖图片里的信息。</strong>JSON 本身也不包含全部权重与输入素材，不等于能像素级复现。见<a href="https://docs.comfy.org/basic-concepts/workflow" target="_blank" rel="noopener noreferrer">工作流保存说明</a>。</p>
+              <p>对外分享前，检查工作流与元数据里有没有私人路径、敏感提示词或服务凭据。可复现材料先按团队约定保存，不要为了公开教程把内部素材一起发出去。</p>
+
+              <h3>八、常见卡点与发布边界</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>现象</th><th>优先检查</th></tr></thead>
+                  <tbody>
+                    <tr><td>导入后节点缺失或标红</td><td>工作流所需的核心版本、自定义节点及依赖。不要看见报错就安装来源不明的整合包。</td></tr>
+                    <tr><td>找不到模型或加载失败</td><td>权重是否齐全、目录与加载器是否匹配、格式是否兼容。改文件名不会把一种模型变成另一种。</td></tr>
+                    <tr><td>显存不足或生成很慢</td><td>具体报错、模型变体、尺寸、帧数与内存策略。一次失败不能直接证明显卡损坏或必须升级。</td></tr>
+                    <tr><td>角色漂移、动作变形、画面闪烁</td><td>参考是否一致、动作是否过于复杂、模型是否支持所需控制。尝试缩短镜头、简化动作或重设计分镜。</td></tr>
+                    <tr><td>没有声音或对白不准</td><td>模型与工作流是否支持音频，是否有输出音轨。必要时分开做配音与剪辑，不假定只是某个开关没勾。</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="note note-warn">
+                <b>自定义节点不只是「一块积木」</b>
+                <p>安装自定义节点会运行代码并引入依赖。先核对来源与维护情况，在可恢复的环境里测试；外部服务节点还要确认数据去向、密钥与计费。不要为跑一个工作流随意关闭系统安全措施。见<a href="https://docs.comfy.org/basic-concepts/custom-nodes" target="_blank" rel="noopener noreferrer">官方自定义节点说明</a>。</p>
+              </div>
+              <p>正式发布前，分别核对模型、角色参考、音乐、字体和其他素材的使用许可；涉及真人肖像或声音，要先确认授权，不做未经允许的声音克隆或冒充。发布平台的 AI 内容标识与其他要求也要逐项核对，不能用「AI 生成的」作为免责理由。</p>
+              <p>本章产品与教程信息核实于 2026 年 10 月 2 日。<strong>先做好一个镜头，再组织一个故事，最后把可继续修改的流程交出去。</strong>这比收集一堆还没跑通的工作流更适合作为入门目标。</p>
+            </div>
+          </details>
+
         </div>
         </div>
       </section>
@@ -1259,7 +1493,7 @@ git push -u origin 分支名-recovered</code></pre>
             <p>第三章列出的研究说明，在那些特定样本与设置下，功能通过并不能保证安全通过。不能把论文中的比例直接套到我们的小程序；真正需要的是针对项目风险做验证。</p>
             <p>结论不是「别用 AI 写代码」，而是：<strong>功能跑通不等于可以上线。</strong></p>
           </div>
-          <p>下面这六条，是把前面六章压缩之后留下的部分。刚开始做的时候，先照着做，做熟了再慢慢内化成习惯。</p>
+          <p>下面六条总结基础六章的协作习惯。后两章的决策与媒体制作，也需要明确边界、验证结果并保存过程；熟悉之后，再把这些习惯用到自己的任务里。</p>
         </div>
         <div class="principles-list reveal">
           <article><span>01</span><div><h3>用 AI 提速度，不用它替你负责</h3><p>它可以写得很快，但出了事是你在承担。「先跑起来」阶段可以不看每一行；「要给用户用」阶段必须能解释、能验证。</p></div></article>
@@ -1283,6 +1517,8 @@ git push -u origin 分支名-recovered</code></pre>
       </div>
       <div class="footer-links">
         <a href="#main-content">回到顶部</a>
+        <a href="#ch-07">Jev 决策模型</a>
+        <a href="#ch-08">ComfyUI 与 AI 短剧</a>
         <a href="./development.html">技术部介绍</a>
         <a href="./index.html">返回首页</a>
       </div>
